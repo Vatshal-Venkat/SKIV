@@ -10,59 +10,59 @@
    1. DESIGN TOKENS
    ============================================================ */
 :root {
-  /* ---- Dark community theme ---- */
-  --bg-primary: #0d0d12;
-  --bg-secondary: #141420;
-  --bg-card: #1a1a2e;
-  --bg-card-hover: #1f1f35;
-  --bg-elevated: #252540;
-  --bg-input: #12121e;
-  --bg-overlay: rgba(6, 6, 12, 0.75);
+  /* ---- Premium Black & Orange Main Theme ---- */
+  --bg-primary: #050505;        /* Deep rich black */
+  --bg-secondary: #0d0d0d;      /* Slightly lighter black for headers/sections */
+  --bg-card: #141414;           /* Deep dark grey/black cards */
+  --bg-card-hover: #1b1b1b;     /* Card hover */
+  --bg-elevated: #222222;       /* Elevated widgets */
+  --bg-input: #080808;          /* Dark input boxes */
+  --bg-overlay: rgba(0, 0, 0, 0.9);
 
-  /* ---- Blue accent (skiv.online palette) ---- */
-  --accent: #1e90ff;
-  --accent-hover: #3aa0ff;
-  --accent-dark: #0a6dd6;
-  --accent-glow: rgba(30, 144, 255, 0.15);
-  --accent-light: #60b4ff;
-  --accent-subtle: rgba(30, 144, 255, 0.08);
+  /* ---- Vibrant Amber/Orange Accent ---- */
+  --accent: #f97316;            /* Premium Orange */
+  --accent-hover: #fb923c;      /* Orange hover */
+  --accent-dark: #ea580c;       /* Dark orange */
+  --accent-glow: rgba(249, 115, 22, 0.15);
+  --accent-light: #ffedd5;      /* Warm white/orange tint */
+  --accent-subtle: rgba(249, 115, 22, 0.08);
 
-  /* ---- Warm gold for special highlights ---- */
-  --gold: #f0a030;
-  --gold-light: #ffc054;
-  --gold-dark: #c8851a;
-  --gold-glow: rgba(240, 160, 48, 0.15);
+  /* ---- Gold/Amber highlights ---- */
+  --gold: #f59e0b;
+  --gold-light: #fbbf24;
+  --gold-dark: #d97706;
+  --gold-glow: rgba(245, 158, 11, 0.1);
 
   /* ---- Status colors ---- */
-  --success: #22c55e;
-  --success-dark: #16a34a;
+  --success: #10b981;
+  --success-dark: #059669;
   --warning: #f59e0b;
   --warning-dark: #d97706;
   --danger: #ef4444;
   --danger-dark: #dc2626;
-  --info: #38bdf8;
+  --info: #0ea5e9;
 
-  /* ---- Text ---- */
-  --text-primary: #e8e8f0;
-  --text-secondary: #8888a8;
-  --text-muted: #55556a;
+  /* ---- High-Contrast Slate Text ---- */
+  --text-primary: #fafafa;      /* Warm white */
+  --text-secondary: #a3a3a3;    /* Cool grey */
+  --text-muted: #737373;        /* Muted grey */
   --text-link: var(--accent);
   --text-link-hover: var(--accent-hover);
-  --text-inverse: #0d0d12;
+  --text-inverse: #050505;
 
-  /* ---- Borders ---- */
-  --border: #1e1e30;
-  --border-strong: #2a2a42;
+  /* ---- Dark Borders ---- */
+  --border: #262626;            /* dark border */
+  --border-strong: #404040;     /* medium border */
   --border-accent: var(--accent);
-  --border-input: #24243a;
+  --border-input: #262626;
 
-  /* ---- Shadows ---- */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 20px var(--accent-glow);
-  --shadow-gold-glow: 0 0 20px var(--gold-glow);
+  /* ---- Subtle Shadows with Orange Cast ---- */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 16px 36px rgba(0, 0, 0, 0.8);
+  --shadow-glow: 0 0 15px var(--accent-glow);
+  --shadow-gold-glow: 0 0 15px var(--gold-glow);
 
   /* ---- Typography ---- */
   --font-heading: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;

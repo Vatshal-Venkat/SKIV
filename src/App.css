@@ -40,7 +40,7 @@
 }
 
 .navbar--scrolled {
-  background: rgba(20, 20, 32, 0.85);
+  background: rgba(13, 13, 13, 0.85);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
   box-shadow: var(--shadow-md);
@@ -1748,9 +1748,29 @@
   text-decoration: underline;
 }
 
-/* ============================================================
-   10. RESPONSIVE DESIGN
-   ============================================================ */
+/* Desktop Compact / Laptop viewports */
+@media (max-width: 1280px) {
+  .navbar__inner {
+    gap: var(--space-3);
+  }
+
+  .navbar__link {
+    padding: var(--space-2) var(--space-2);
+    font-size: 0.7rem;
+  }
+
+  .navbar__social {
+    display: none !important;
+  }
+
+  .navbar__search-input {
+    width: 120px;
+  }
+
+  .navbar__search-input:focus {
+    width: 160px;
+  }
+}
 
 /* Tablet — 2-column layout */
 @media (max-width: 1024px) {
@@ -2013,6 +2033,30 @@
   .footer__about-photos {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* ---- Right Sidebar Blue Color Custom Override ---- */
+.sidebar-right .fraternity-widget__link,
+.sidebar-right .literature-widget__link,
+.sidebar-right a {
+  color: #3b82f6 !important;
+}
+
+.sidebar-right .fraternity-widget__link:hover,
+.sidebar-right .literature-widget__link:hover,
+.sidebar-right a:hover {
+  color: #60a5fa !important;
+}
+
+.sidebar-right .fraternity-widget__link::before,
+.sidebar-right .literature-widget__link::before {
+  color: #3b82f6 !important;
+}
+
+.sidebar-right .fraternity-widget__heading,
+.sidebar-right .literature-widget__heading {
+  color: #3b82f6 !important;
+  border-bottom: 1px solid var(--border);
 }
 
 /* ============================================================

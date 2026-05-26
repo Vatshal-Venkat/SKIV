@@ -1,15 +1,24 @@
 import { useState } from 'react';
-import { X, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 
 const DemoLogin = ({ onClose }) => {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('demo@skiv.online');
   const [password, setPassword] = useState('password123');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // Demo login placeholder
+    if (isSignUp) {
+      // Demo sign up placeholder
+      console.log('Registering:', { name, email, password });
+    } else {
+      // Demo login placeholder
+      console.log('Logging in:', { email, password });
+    }
     onClose();
   };
 
@@ -25,17 +34,35 @@ const DemoLogin = ({ onClose }) => {
         <button
           className="demo-login__close"
           onClick={onClose}
-          aria-label="Close login dialog"
+          aria-label="Close dialog"
         >
           <X size={20} />
         </button>
 
         <div className="demo-login__header">
-          <h2 className="demo-login__title">Welcome Back</h2>
-          <p className="demo-login__subtitle">Login to skiv.online</p>
+          <h2 className="demo-login__title">
+            {isSignUp ? 'Create Account' : 'Welcome Back'}
+          </h2>
+          <p className="demo-login__subtitle">
+            {isSignUp ? 'Sign up for skiv.online' : 'Login to skiv.online'}
+          </p>
         </div>
 
-        <form className="demo-login__form" onSubmit={handleLogin}>
+        <form className="demo-login__form" onSubmit={handleSubmit}>
+          {isSignUp && (
+            <div className="form-group demo-login__input-group">
+              <User size={18} className="demo-login__input-icon" />
+              <input
+                type="text"
+                className="form-input demo-login__input"
+                placeholder="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+          )}
+
           <div className="form-group demo-login__input-group">
             <Mail size={18} className="demo-login__input-icon" />
             <input
@@ -68,22 +95,65 @@ const DemoLogin = ({ onClose }) => {
             </button>
           </div>
 
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-            />
-            <span>Remember me</span>
-          </label>
+          {isSignUp && (
+            <div className="form-group demo-login__input-group">
+              <Lock size={18} className="demo-login__input-icon" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="form-input demo-login__input"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+          )}
+
+          {!isSignUp && (
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <span>Remember me</span>
+            </label>
+          )}
 
           <button type="submit" className="btn btn-primary btn-block">
-            Login
+            {isSignUp ? 'Sign Up' : 'Login'}
           </button>
 
           <p className="demo-login__signup-prompt">
-            Don&apos;t have an account?{' '}
-            <a href="#" className="demo-login__signup-link">Sign up</a>
+            {isSignUp ? (
+              <>
+                Already have an account?{' '}
+                <a
+                  href="#"
+                  className="demo-login__signup-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsSignUp(false);
+                  }}
+                >
+                  Login
+                </a>
+              </>
+            ) : (
+              <>
+                New User?{' '}
+                <a
+                  href="#"
+                  className="demo-login__signup-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsSignUp(true);
+                  }}
+                >
+                  Sign UP
+                </a>
+              </>
+            )}
           </p>
         </form>
 

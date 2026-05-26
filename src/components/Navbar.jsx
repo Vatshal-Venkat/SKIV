@@ -76,7 +76,7 @@ const navLinks = [
   { label: 'SIGN UP AS DEVELOPER', href: '#', dropdown: null, accent: true }
 ];
 
-const Navbar = () => {
+const Navbar = ({ onLoginClick, onSignUpClick }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -167,6 +167,11 @@ const Navbar = () => {
             />
           </form>
 
+          {/* Auth Buttons */}
+          <div className="navbar__auth" style={{ marginLeft: '8px' }}>
+            <button className="btn btn-primary btn-sm" onClick={onLoginClick}>Login</button>
+          </div>
+
           <button
             className="navbar__hamburger show-mobile-only"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -199,6 +204,11 @@ const Navbar = () => {
             )}
           </div>
         ))}
+        
+        <div className="navbar__mobile-auth" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
+          <button className="btn btn-primary btn-sm" onClick={() => { onLoginClick(); setMobileMenuOpen(false); }}>Login</button>
+        </div>
+
         <div className="navbar__mobile-social">
           <a href="#" className="navbar__social-link navbar__social-link--rss"><Rss size={16} /></a>
           <a href="#" className="navbar__social-link navbar__social-link--fb"><Facebook size={16} /></a>

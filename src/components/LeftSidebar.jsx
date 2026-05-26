@@ -1,96 +1,14 @@
-import { useState } from 'react';
 import {
-  UserPlus,
   Heart,
   Briefcase,
-  GitBranch,
-  LogIn,
-  Eye,
-  EyeOff
+  GitBranch
 } from 'lucide-react';
 
 const LeftSidebar = () => {
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-  };
-
   const avatars = Array(6).fill('/images/avatar1.png');
 
   return (
     <>
-      {/* Login Widget */}
-      <div className="sidebar-widget login-widget">
-        <h3 className="section-title">WELCOME</h3>
-        <div className="sidebar-widget__body">
-          <form className="login-widget__form" onSubmit={handleLogin}>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Username or Email"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-            />
-            <div style={{ position: 'relative' }}>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                className="form-input"
-                placeholder="Password"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-              />
-              <button
-                type="button"
-                style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label="Toggle password visibility"
-              >
-                {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-              </button>
-            </div>
-            <label className="form-check">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-              <span>Remember me</span>
-            </label>
-            <button type="submit" className="btn btn-primary btn-block login-widget__submit">
-              <LogIn size={14} />
-              LOGIN
-            </button>
-            <div className="login-widget__links">
-              <a href="#" className="login-widget__link">Sign up</a>
-              <a href="#" className="login-widget__link">Forgot password?</a>
-              <a href="#" className="login-widget__link">Resend Activation Email</a>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      {/* Sign Up Widget */}
-      <div className="sidebar-widget signup-widget">
-        <h3 className="section-title">SIGN UP</h3>
-        <div className="sidebar-widget__body">
-          <div className="signup-widget__illustration">
-            <UserPlus size={40} />
-          </div>
-          <p className="signup-widget__text">
-            Join our growing community of Sistakaranams!
-          </p>
-          <button className="btn btn-primary btn-block" style={{ marginTop: 'var(--space-3)' }}>Create Account</button>
-          <p className="signup-widget__text" style={{ marginTop: 'var(--space-3)', fontSize: 'var(--fs-xs)' }}>
-            If you have trouble signing up, please send an email to{' '}
-            <a href="mailto:support@skiv.online">support@skiv.online</a>
-          </p>
-        </div>
-      </div>
-
       {/* Vivaha Vedika Widget */}
       <div className="sidebar-widget">
         <h3 className="section-title section-title--gold">VIVAHA VEDIKA</h3>
