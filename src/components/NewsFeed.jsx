@@ -59,13 +59,13 @@ const NewsFeed = () => {
     <div className="news-feed">
       {/* Welcome Banner */}
       <div className="welcome-banner">
-        <p className="welcome-banner__intro">Welcome to</p>
+        <p className="welcome-banner__label">Welcome to</p>
         <div className="welcome-banner__logo">
-          <span className="welcome-banner__letter welcome-banner__letter--red">S</span>
-          <span className="welcome-banner__letter welcome-banner__letter--green">K</span>
-          <span className="welcome-banner__letter welcome-banner__letter--blue">I</span>
-          <span className="welcome-banner__letter welcome-banner__letter--yellow">V</span>
-          <span className="welcome-banner__dot-online">.online</span>
+          <span className="welcome-banner__letter welcome-banner__letter--s">S</span>
+          <span className="welcome-banner__letter welcome-banner__letter--k">K</span>
+          <span className="welcome-banner__letter welcome-banner__letter--i">I</span>
+          <span className="welcome-banner__letter welcome-banner__letter--v">V</span>
+          <span className="welcome-banner__domain">.online</span>
         </div>
         <p className="welcome-banner__tagline">
           The official Website of Sistakaranam IkyaVedika
@@ -74,25 +74,30 @@ const NewsFeed = () => {
 
       {/* News Section */}
       <div className="news-section">
-        <h2 className="news-section__heading">News</h2>
+        <h2 className="section-title">NEWS</h2>
 
-        <div className="news-section__articles">
+        <div className="news-list">
           {articles.map((article) => (
-            <article key={article.id} className="news-card">
-              <div className="news-card__image-wrapper">
+            <article key={article.id} className="news-article">
+              <div className="news-article__image">
                 <img
                   src={article.images[0]}
                   alt={article.title}
-                  className="news-card__image"
+                  className="news-article__thumb"
                 />
               </div>
-              <div className="news-card__content">
-                <h3 className="news-card__title">{article.title}</h3>
-                <span className="news-card__date">{article.date}</span>
-                <p className="news-card__excerpt">{article.excerpt}</p>
-                <a href="#" className="news-card__read-more">
-                  READ MORE..
-                </a>
+              <div className="news-article__content">
+                <div className="news-article__meta">
+                  <span className="news-article__category">Community Update</span>
+                  <span className="news-article__date">{article.date}</span>
+                </div>
+                <h3 className="news-article__title">{article.title}</h3>
+                <p className="news-article__excerpt">{article.excerpt}</p>
+                <div className="news-article__footer">
+                  <a href="#" className="news-article__read-more">
+                    READ MORE..
+                  </a>
+                </div>
               </div>
             </article>
           ))}
