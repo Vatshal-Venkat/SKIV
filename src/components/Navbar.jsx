@@ -38,45 +38,45 @@ const Youtube = ({ size = 14 }) => (
 const navLinks = [
   { label: 'HOME', href: '/', dropdown: null },
   {
-    label: 'COMMUNITY LOBBY',
+    label: 'COMMUNITY',
     href: '#',
     dropdown: [
-      { label: 'Forum', href: '#' },
+      { label: 'Forum Lobby', href: '#' },
       { label: 'Discussions', href: '#' },
-      { label: 'Events', href: '#' }
+      { label: 'Events Hub', href: '#' }
     ]
   },
   {
     label: 'CHRONICLES',
     href: '#',
     dropdown: [
-      { label: 'History', href: '#' },
-      { label: 'Timeline', href: '#' },
-      { label: 'Archives', href: '#' }
+      { label: 'Community History', href: '#' },
+      { label: 'Interactive Timeline', href: '#' },
+      { label: 'Archives & Records', href: '#' }
     ]
   },
   {
     label: 'RESOURCES',
     href: '#',
     dropdown: [
-      { label: 'Documents', href: '#' },
-      { label: 'Publications', href: '#' },
-      { label: 'Media Gallery', href: '#' }
+      { label: 'Official Documents', href: '#' },
+      { label: 'Community Publications', href: '#' },
+      { label: 'Media Gallery', href: '#' },
+      { label: 'Join as Developer', href: '#', accent: true }
     ]
   },
   {
     label: 'PEOPLE',
     href: '#',
     dropdown: [
-      { label: 'Members Directory', href: '#' },
-      { label: 'Associations', href: '#' },
+      { label: 'Member Directory', href: '#' },
+      { label: 'Formal Associations', href: '#' },
       { label: 'Youth Portal', href: '#' }
     ]
-  },
-  { label: 'SIGN UP AS DEVELOPER', href: '#', dropdown: null, accent: true }
+  }
 ];
 
-const Navbar = ({ onLoginClick, onSignUpClick }) => {
+const Navbar = ({ onLoginClick }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -95,25 +95,24 @@ const Navbar = ({ onLoginClick, onSignUpClick }) => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
+    console.log('Searching for:', searchQuery);
   };
 
   return (
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__inner">
-        {/* Logo */}
+        {/* Brand/Logo */}
         <a href="/" className="navbar__brand">
           <div className="navbar__emblem">
-            <Crown size={22} />
+            <Crown size={20} />
           </div>
           <div className="navbar__brand-text">
-            <span className="navbar__title">SISTAKARANAM IKYAVEDIKA</span>
-            <span className="navbar__tagline">
-              ONE DIGITAL PLATFORM FOR ALL SISTAKARANAMS
-            </span>
+            <h1 className="navbar__title">Sistakaranam Ikyavedika</h1>
+            <p className="navbar__tagline">One Digital Platform for all Sistakaranams</p>
           </div>
         </a>
 
-        {/* Navigation Links — Desktop */}
+        {/* Center Nav Links */}
         <div className="navbar__nav hide-mobile">
           {navLinks.map((link, index) => (
             <div
@@ -124,19 +123,24 @@ const Navbar = ({ onLoginClick, onSignUpClick }) => {
             >
               <a
                 href={link.href}
-                className={`navbar__link ${link.accent ? 'navbar__link--cta' : ''} ${link.href === '/' ? 'navbar__link--active' : ''}`}
+                className={`navbar__link ${link.href === '/' ? 'navbar__link--active' : ''}`}
                 onClick={(e) => {
                   if (link.dropdown) e.preventDefault();
                 }}
               >
                 {link.label}
-                {link.dropdown && <ChevronDown size={12} className="navbar__link-chevron" />}
+                {link.dropdown && <ChevronDown size={10} className="navbar__link-chevron" />}
               </a>
 
               {link.dropdown && (
                 <div className="navbar__dropdown">
                   {link.dropdown.map((item, subIndex) => (
-                    <a key={subIndex} href={item.href} className="navbar__dropdown-link">
+                    <a
+                      key={subIndex}
+                      href={item.href}
+                      className="navbar__dropdown-link"
+                      style={item.accent ? { color: 'var(--gold)' } : {}}
+                    >
                       {item.label}
                     </a>
                   ))}
@@ -148,27 +152,19 @@ const Navbar = ({ onLoginClick, onSignUpClick }) => {
 
         {/* Right Actions */}
         <div className="navbar__actions">
-          <div className="navbar__social hide-mobile">
-            <a href="#" className="navbar__social-link navbar__social-link--rss" aria-label="RSS"><Rss size={14} /></a>
-            <a href="#" className="navbar__social-link navbar__social-link--fb" aria-label="Facebook"><Facebook size={14} /></a>
-            <a href="#" className="navbar__social-link navbar__social-link--x" aria-label="Twitter"><Twitter size={14} /></a>
-            <a href="#" className="navbar__social-link navbar__social-link--insta" aria-label="Instagram"><Instagram size={14} /></a>
-            <a href="#" className="navbar__social-link navbar__social-link--yt" aria-label="YouTube"><Youtube size={14} /></a>
-          </div>
-
           <form className="navbar__search hide-mobile" onSubmit={handleSearchSubmit}>
             <Search size={14} className="navbar__search-icon" />
             <input
               type="text"
               className="navbar__search-input"
-              placeholder="Search..."
+              placeholder="Search portal..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </form>
 
-          {/* Auth Buttons */}
-          <div className="navbar__auth" style={{ marginLeft: '8px' }}>
+          {/* Auth Button */}
+          <div className="navbar__auth" style={{ marginLeft: '4px' }}>
             <button className="btn btn-primary btn-sm" onClick={onLoginClick}>Login</button>
           </div>
 
@@ -177,7 +173,7 @@ const Navbar = ({ onLoginClick, onSignUpClick }) => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
@@ -188,7 +184,7 @@ const Navbar = ({ onLoginClick, onSignUpClick }) => {
           <div key={index} className="navbar__item">
             <a
               href={link.href}
-              className={`navbar__link ${link.accent ? 'navbar__link--cta' : ''}`}
+              className="navbar__link"
               onClick={() => { if (!link.dropdown) setMobileMenuOpen(false); }}
             >
               {link.label}
@@ -196,7 +192,13 @@ const Navbar = ({ onLoginClick, onSignUpClick }) => {
             {link.dropdown && (
               <div className="navbar__dropdown">
                 {link.dropdown.map((item, subIndex) => (
-                  <a key={subIndex} href={item.href} className="navbar__dropdown-link" onClick={() => setMobileMenuOpen(false)}>
+                  <a
+                    key={subIndex}
+                    href={item.href}
+                    className="navbar__dropdown-link"
+                    onClick={() => setMobileMenuOpen(false)}
+                    style={item.accent ? { color: 'var(--gold)' } : {}}
+                  >
                     {item.label}
                   </a>
                 ))}

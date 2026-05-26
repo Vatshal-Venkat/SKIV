@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Users, Briefcase, Heart, Calendar } from 'lucide-react';
 
 const articles = [
   {
@@ -57,6 +57,41 @@ const NewsFeed = () => {
 
   return (
     <div className="news-feed">
+      {/* Interactive Stats Dashboard */}
+      <div className="stats-dashboard">
+        <div className="stat-card">
+          <div className="stat-card__icon" style={{ color: 'var(--accent)' }}>
+            <Users size={20} />
+          </div>
+          <div className="stat-card__value">4,850+</div>
+          <div className="stat-card__label">Members</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card__icon" style={{ color: 'var(--success)' }}>
+            <Briefcase size={20} />
+          </div>
+          <div className="stat-card__value">28 Active</div>
+          <div className="stat-card__label">Jobs Portal</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card__icon" style={{ color: 'var(--gold)' }}>
+            <Heart size={20} />
+          </div>
+          <div className="stat-card__value">112 Matches</div>
+          <div className="stat-card__label">Matrimony</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card__icon" style={{ color: 'var(--danger)' }}>
+            <Calendar size={20} />
+          </div>
+          <div className="stat-card__value">3 Events</div>
+          <div className="stat-card__label">Scheduled</div>
+        </div>
+      </div>
+
       {/* Welcome Banner */}
       <div className="welcome-banner">
         <p className="welcome-banner__label">Welcome to</p>
@@ -74,7 +109,7 @@ const NewsFeed = () => {
 
       {/* News Section */}
       <div className="news-section">
-        <h2 className="section-title">NEWS</h2>
+        <h2 className="section-title">NEWS & UPDATES</h2>
 
         <div className="news-list">
           {articles.map((article) => (

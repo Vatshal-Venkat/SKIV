@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { ChevronRight } from 'lucide-react';
+
 const formalAssociations = [
   'All India Sistakarana Association',
   'Sista Karana Association, Kharagpur',
@@ -12,12 +15,6 @@ const formalAssociations = [
   'ISSKA'
 ];
 
-const informalGroups = [
-  'Kalam Snehitulu',
-  'Bengaluru Karanalu',
-  'Businessman'
-];
-
 const publications = [
   'Sistakaranam Charitra',
   'Kula Deepika Monthly',
@@ -26,114 +23,123 @@ const publications = [
   'Community Chronicles Digest'
 ];
 
-const externalSources = [
-  { label: 'Wikipedia - Sistakaranams', href: '#' },
-  { label: 'Historical Archives Online', href: '#' }
-];
-
 const familyIdentifiers = [
-  { label: 'Surnames', href: '#' },
-  { label: 'Gotramulu', href: '#' },
-  { label: 'Sistakaranams - by ARK Rao', href: '#' }
+  'Surnames (Inti Perlu)',
+  'Gotramulu Directories',
+  'Sistakaranams Origins - ARK Rao',
+  'Gotram Guide & Lineages'
 ];
 
 const RightSidebar = () => {
+  const [activeTab, setActiveTab] = useState('associations');
+
+  const creators = Array(4).fill('/images/avatar1.png');
+
   return (
     <div className="sidebar-right">
-      {/* Articles Section */}
+      {/* Dynamic Community Hub Switcher */}
       <div className="sidebar-widget">
-        <h3 className="section-title">ARTICLES</h3>
-      </div>
-
-      {/* Our Fraternity */}
-      <div className="sidebar-widget fraternity-widget">
         <div className="sidebar-widget__body">
-          <h4 className="fraternity-widget__heading">OUR FRATERNITY</h4>
+          <h4 className="section-title">COMMUNITY DIRECTORY</h4>
+          
+          <div className="tab-switcher">
+            <button
+              className={`tab-btn ${activeTab === 'associations' ? 'tab-btn--active' : ''}`}
+              onClick={() => setActiveTab('associations')}
+            >
+              Associations
+            </button>
+            <button
+              className={`tab-btn ${activeTab === 'literature' ? 'tab-btn--active' : ''}`}
+              onClick={() => setActiveTab('literature')}
+            >
+              Literature
+            </button>
+            <button
+              className={`tab-btn ${activeTab === 'identities' ? 'tab-btn--active' : ''}`}
+              onClick={() => setActiveTab('identities')}
+            >
+              Identities
+            </button>
+          </div>
 
-          <h5 className="fraternity-widget__heading fraternity-widget__heading--secondary">
-            <a href="#" className="fraternity-widget__link">Formal Associations</a>
-          </h5>
-          <ul className="fraternity-widget__list">
-            {formalAssociations.map((name, index) => (
-              <li key={index}>
-                <a href="#" className="fraternity-widget__link">{name}</a>
-              </li>
-            ))}
-          </ul>
+          <div className="tab-content">
+            {activeTab === 'associations' && (
+              <div className="tab-list">
+                {formalAssociations.slice(0, 6).map((name, index) => (
+                  <div key={index} className="tab-list-item">
+                    <ChevronRight size={14} className="tab-list-arrow" />
+                    <a href="#" className="tab-list-link">{name}</a>
+                  </div>
+                ))}
+                <a href="#" style={{ display: 'block', textAlign: 'right', fontSize: '0.75rem', marginTop: 'var(--space-2)', color: 'var(--accent-hover)', fontWeight: 'bold' }}>
+                  View All Associations ({formalAssociations.length}) →
+                </a>
+              </div>
+            )}
 
-          <h5 className="fraternity-widget__heading fraternity-widget__heading--secondary">
-            <a href="#" className="fraternity-widget__link">Informal Groups</a>
-          </h5>
-          <ul className="fraternity-widget__list">
-            {informalGroups.map((name, index) => (
-              <li key={index}>
-                <a href="#" className="fraternity-widget__link">{name}</a>
-              </li>
-            ))}
-          </ul>
+            {activeTab === 'literature' && (
+              <div className="tab-list">
+                {publications.map((name, index) => (
+                  <div key={index} className="tab-list-item">
+                    <ChevronRight size={14} className="tab-list-arrow" />
+                    <a href="#" className="tab-list-link">{name}</a>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'identities' && (
+              <div className="tab-list">
+                {familyIdentifiers.map((name, index) => (
+                  <div key={index} className="tab-list-item">
+                    <ChevronRight size={14} className="tab-list-arrow" />
+                    <a href="#" className="tab-list-link">{name}</a>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Our Historical Profile */}
+      {/* Featured Matrimonial Match (Vivaha Vedika) */}
       <div className="sidebar-widget">
-        <h3 className="section-title">OUR HISTORICAL PROFILE</h3>
-      </div>
-
-      {/* Community Literature */}
-      <div className="sidebar-widget literature-widget">
         <div className="sidebar-widget__body">
-          <h4 className="literature-widget__heading">COMMUNITY LITERATURE</h4>
-
-          <h5 className="literature-widget__heading literature-widget__heading--secondary">
-            <a href="#" className="literature-widget__link">Publications</a>
-          </h5>
-          <ul className="literature-widget__list">
-            {publications.map((name, index) => (
-              <li key={index}>
-                <a href="#" className="literature-widget__link">{name}</a>
-              </li>
-            ))}
-          </ul>
-
-          <h5 className="literature-widget__heading literature-widget__heading--secondary">
-            <a href="#" className="literature-widget__link">External Sources</a>
-          </h5>
-          <ul className="literature-widget__list">
-            {externalSources.map((item, index) => (
-              <li key={index}>
-                <a href={item.href} className="literature-widget__link">{item.label}</a>
-              </li>
-            ))}
-          </ul>
+          <h4 className="section-title" style={{ color: 'var(--gold)' }}>VIVAHA VEDIKA</h4>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-3)' }}>
+            Featured matrimonial profile in our community lobby:
+          </p>
+          <div className="featured-profile">
+            <img src="/images/avatar1.png" alt="Featured Profile" className="profile-avatar" />
+            <div className="profile-details">
+              <span className="profile-name">Sri V. Rahul Karanam</span>
+              <span className="profile-meta">28 Yrs • B.Tech (Software Developer) • Bangalore</span>
+            </div>
+          </div>
+          <button className="btn btn-secondary btn-sm btn-block" style={{ marginTop: 'var(--space-4)' }}>
+            Browse Matrimony Lobby
+          </button>
         </div>
       </div>
 
-      {/* Community Identities */}
-      <div className="sidebar-widget identities-widget">
+      {/* Community YouTubers / Creators */}
+      <div className="sidebar-widget">
         <div className="sidebar-widget__body">
-          <h4 className="fraternity-widget__heading" style={{ color: 'var(--gold)' }}>COMMUNITY IDENTITIES</h4>
-
-          <h5 className="fraternity-widget__heading fraternity-widget__heading--secondary">
-            <a href="#" className="fraternity-widget__link">Family Identifiers</a>
-          </h5>
-          <ul className="fraternity-widget__list">
-            {familyIdentifiers.map((item, index) => (
-              <li key={index}>
-                <a href={item.href} className="fraternity-widget__link">{item.label}</a>
-              </li>
+          <h4 className="section-title">OUR CREATORS</h4>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+            Latest content creator profiles from our fraternity:
+          </p>
+          <div className="creators-grid">
+            {creators.map((src, index) => (
+              <div key={index} className="creator-item">
+                <img src={src} alt={`Creator ${index + 1}`} />
+              </div>
             ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Government Notifications */}
-      <div className="sidebar-widget govt-widget">
-        <div className="sidebar-widget__body">
-          <h4 className="fraternity-widget__heading">GOVERNMENT NOTIFICATIONS</h4>
-
-          <h5 className="fraternity-widget__heading fraternity-widget__heading--secondary">
-            <a href="#" className="fraternity-widget__link">Government Orders</a>
-          </h5>
+          </div>
+          <a href="#" style={{ display: 'block', textAlign: 'center', fontSize: '0.75rem', marginTop: 'var(--space-3)', color: 'var(--accent-hover)', fontWeight: 'bold' }}>
+            View All Creators (44) →
+          </a>
         </div>
       </div>
     </div>

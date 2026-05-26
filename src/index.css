@@ -1,71 +1,61 @@
 /* ============================================================
    SKIV.ONLINE — Sistakaranam Ikyavedika
-   Awwwards-Level Design Tokens & Global Styles
+   Awwwards-Level Design Tokens & Global Styles (Aurora Teal & Ink)
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  /* ---- Zinc & Obsidian Dark Theme (Stripe/Linear Inspired) ---- */
-  --bg-primary: #030303;        /* Pitch Black */
-  --bg-secondary: #09090b;      /* Warm Slate Black */
-  --bg-card: #121214;           /* Solid card black */
-  --bg-card-hover: #18181b;     /* Card hover zinc-900 */
-  --bg-elevated: #1e1e24;       /* Elevated menus */
-  --bg-input: #08080a;          /* Inputs */
-  --bg-overlay: rgba(3, 3, 3, 0.94);
+  /* ---- Graphite & Deep Ink Theme ---- */
+  --bg-primary: #080a10;        /* Deep Obsidian Navy */
+  --bg-secondary: #0e111a;      /* Rich Slate Navy */
+  --bg-card: #151926;           /* Solid card background */
+  --bg-card-hover: #1e2436;     /* Card hover */
+  --bg-elevated: #22293d;       /* Elevated dialogs/menus */
+  --bg-input: #0b0e17;          /* Input fields background */
+  --bg-overlay: rgba(8, 10, 16, 0.96);
 
-  /* ---- Tangerine-Sunset Premium Shade ---- */
-  --accent: #ff5500;            /* Tangerine orange */
-  --accent-hover: #ff732e;      /* Lighter orange */
-  --accent-dark: #cc3300;       /* Burnt terracotta */
-  --accent-glow: rgba(255, 85, 0, 0.16);
-  --accent-light: #ffedd5;
-  --accent-subtle: rgba(255, 85, 0, 0.05);
+  /* ---- Aurora Teal & Cyan Accents ---- */
+  --accent: #06b6d4;            /* Vibrant Teal */
+  --accent-hover: #22d3ee;      /* Light Cyan */
+  --accent-dark: #0891b2;       /* Deep Teal */
+  --accent-glow: rgba(6, 182, 212, 0.18);
+  --accent-light: #ecfeff;
+  --accent-subtle: rgba(6, 182, 212, 0.06);
   
-  /* Beautiful Warm Sunset Gradient */
-  --accent-gradient: linear-gradient(135deg, #ff5500 0%, #ff8c00 100%);
-  --accent-gradient-hover: linear-gradient(135deg, #ff732e 0%, #ffa53b 100%);
-  --accent-gradient-active: linear-gradient(135deg, #cc3300 0%, #e67300 100%);
-
-  /* ---- Warm Sunset Gold ---- */
-  --gold: #ffaa00;
-  --gold-light: #ffc44d;
-  --gold-dark: #cc8800;
-  --gold-glow: rgba(255, 170, 0, 0.12);
+  /* Beautiful Aurora Cyan to Indigo Gradient */
+  --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+  --accent-gradient-hover: linear-gradient(135deg, #22d3ee 0%, #60a5fa 100%);
+  --accent-gradient-active: linear-gradient(135deg, #0891b2 0%, #2563eb 100%);
 
   /* ---- Status Colors ---- */
   --success: #10b981;
-  --success-dark: #059669;
   --warning: #f59e0b;
-  --warning-dark: #d97706;
   --danger: #ef4444;
-  --danger-dark: #dc2626;
-  --info: #0ea5e9;
+  --info: #06b6d4;
 
-  /* ---- Warm High-End Typography Colors ---- */
-  --text-primary: #f4f4f5;      /* Warm white zinc-100 */
-  --text-secondary: #a1a1aa;    /* Cool grey zinc-400 */
-  --text-muted: #52525b;        /* Deep grey zinc-600 */
+  /* ---- High-End Typography Colors ---- */
+  --text-primary: #f8fafc;      /* Warm white */
+  --text-secondary: #94a3b8;    /* Slate-400 */
+  --text-muted: #475569;        /* Slate-600 */
   --text-link: var(--accent-hover);
-  --text-link-hover: #ffa53b;
-  --text-inverse: #030303;
+  --text-link-hover: #60a5fa;
+  --text-inverse: #080a10;
 
-  /* ---- Zinc Border System ---- */
-  --border: rgba(255, 255, 255, 0.04);
-  --border-strong: rgba(255, 255, 255, 0.09);
+  /* ---- Premium Glass Borders ---- */
+  --border: rgba(255, 255, 255, 0.05);
+  --border-strong: rgba(255, 255, 255, 0.12);
   --border-accent: var(--accent);
-  --border-input: rgba(255, 255, 255, 0.06);
+  --border-input: rgba(255, 255, 255, 0.08);
 
-  /* ---- Shadows ---- */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.7);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.85);
+  /* ---- Shadows & Glows ---- */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.8);
   --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.95);
-  --shadow-glow: 0 0 20px var(--accent-glow);
-  --shadow-gold-glow: 0 0 20px var(--gold-glow);
+  --shadow-glow: 0 0 25px var(--accent-glow);
 
-  /* ---- Typography (Space Grotesk & Plus Jakarta) ---- */
+  /* ---- Typography ---- */
   --font-heading: 'Space Grotesk', system-ui, sans-serif;
   --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
 
@@ -92,14 +82,12 @@
   --transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 
-  --navbar-height: 72px;
-  --sidebar-left-width: 290px;
-  --sidebar-right-width: 310px;
-  --content-max-width: 1320px;
+  --navbar-height: 76px;
+  --content-max-width: 1280px;
 }
 
 /* ============================================================
-   2. RESET & BASE (Ambient Lighting Added)
+   2. RESET & BASE (Aurora Radial Aura)
    ============================================================ */
 *,
 *::before,
@@ -120,31 +108,31 @@ body {
   position: relative;
 }
 
-/* Ambient Radial Glow Backdrops */
+/* Aurora Background Aura */
 body::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 15%;
-  width: 700px;
-  height: 700px;
-  background: radial-gradient(circle, rgba(255, 85, 0, 0.045) 0%, transparent 65%);
+  left: 20%;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
-  filter: blur(120px);
+  filter: blur(130px);
 }
 
 body::after {
   content: '';
   position: absolute;
-  top: 800px;
-  right: 10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(255, 170, 0, 0.02) 0%, transparent 60%);
+  top: 1000px;
+  right: 15%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.03) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
-  filter: blur(100px);
+  filter: blur(120px);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -164,7 +152,16 @@ a:hover {
   color: var(--text-link-hover);
 }
 
-/* Section Title: Gradient Accent Bar */
+.glass-panel {
+  background: rgba(21, 25, 38, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* Section Title */
 .section-title {
   position: relative;
   font-family: var(--font-heading);
@@ -188,7 +185,7 @@ a:hover {
   width: 3px;
   background: var(--accent-gradient);
   border-radius: var(--radius-full);
-  box-shadow: 0 0 10px rgba(255, 85, 0, 0.5);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
 }
 
 /* ============================================================
@@ -224,12 +221,12 @@ a:hover {
   background: var(--accent-gradient);
   color: #ffffff;
   border: none;
-  box-shadow: 0 4px 18px rgba(255, 85, 0, 0.2);
+  box-shadow: 0 4px 18px rgba(6, 182, 212, 0.2);
 }
 
 .btn-primary:hover {
   background: var(--accent-gradient-hover);
-  box-shadow: 0 6px 24px rgba(255, 85, 0, 0.35);
+  box-shadow: 0 6px 24px rgba(6, 182, 212, 0.35);
 }
 
 .btn-secondary {
@@ -284,7 +281,7 @@ a:hover {
   background: rgba(255, 255, 255, 0.01);
 }
 
-/* Custom scrollbars */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
