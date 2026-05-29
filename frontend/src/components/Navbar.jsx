@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Crown,
   Rss,
@@ -69,7 +70,7 @@ const navLinks = [
     label: 'PEOPLE',
     href: '#',
     dropdown: [
-      { label: 'Member Directory', href: '#' },
+      { label: 'Matrimony Lobby', href: '/matrimony' },
       { label: 'Formal Associations', href: '#' },
       { label: 'Youth Portal', href: '#' }
     ]
@@ -102,7 +103,7 @@ const Navbar = ({ onLoginClick }) => {
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__inner">
         {/* Brand/Logo */}
-        <a href="/" className="navbar__brand">
+        <Link to="/" className="navbar__brand">
           <div className="navbar__emblem">
             <Crown size={20} />
           </div>
@@ -110,7 +111,7 @@ const Navbar = ({ onLoginClick }) => {
             <h1 className="navbar__title">Sistakaranam Ikyavedika</h1>
             <p className="navbar__tagline">One Digital Platform for all Sistakaranams</p>
           </div>
-        </a>
+        </Link>
 
         {/* Center Nav Links */}
         <div className="navbar__nav hide-mobile">
@@ -121,29 +122,50 @@ const Navbar = ({ onLoginClick }) => {
               onMouseEnter={() => link.dropdown && handleDropdownEnter(index)}
               onMouseLeave={() => link.dropdown && handleDropdownLeave()}
             >
-              <a
-                href={link.href}
-                className={`navbar__link ${link.href === '/' ? 'navbar__link--active' : ''}`}
-                onClick={(e) => {
-                  if (link.dropdown) e.preventDefault();
-                }}
-              >
-                {link.label}
-                {link.dropdown && <ChevronDown size={10} className="navbar__link-chevron" />}
-              </a>
+              {link.href.startsWith('/') ? (
+                <Link
+                  to={link.href}
+                  className={`navbar__link ${link.href === '/' ? 'navbar__link--active' : ''}`}
+                >
+                  {link.label}
+                  {link.dropdown && <ChevronDown size={10} className="navbar__link-chevron" />}
+                </Link>
+              ) : (
+                <a
+                  href={link.href}
+                  className={`navbar__link ${link.href === '/' ? 'navbar__link--active' : ''}`}
+                  onClick={(e) => {
+                    if (link.dropdown) e.preventDefault();
+                  }}
+                >
+                  {link.label}
+                  {link.dropdown && <ChevronDown size={10} className="navbar__link-chevron" />}
+                </a>
+              )}
 
               {link.dropdown && (
                 <div className="navbar__dropdown">
-                  {link.dropdown.map((item, subIndex) => (
-                    <a
-                      key={subIndex}
-                      href={item.href}
-                      className="navbar__dropdown-link"
-                      style={item.accent ? { color: 'var(--gold)' } : {}}
-                    >
-                      {item.label}
-                    </a>
-                  ))}
+                  {link.dropdown.map((item, subIndex) => 
+                    item.href.startsWith('/') ? (
+                      <Link
+                        key={subIndex}
+                        to={item.href}
+                        className="navbar__dropdown-link"
+                        style={item.accent ? { color: 'var(--gold)' } : {}}
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        key={subIndex}
+                        href={item.href}
+                        className="navbar__dropdown-link"
+                        style={item.accent ? { color: 'var(--gold)' } : {}}
+                      >
+                        {item.label}
+                      </a>
+                    )
+                  )}
                 </div>
               )}
             </div>
@@ -182,26 +204,49 @@ const Navbar = ({ onLoginClick }) => {
       <div className={`navbar__mobile-menu ${mobileMenuOpen ? 'navbar__mobile-menu--open' : ''}`}>
         {navLinks.map((link, index) => (
           <div key={index} className="navbar__item">
-            <a
-              href={link.href}
-              className="navbar__link"
-              onClick={() => { if (!link.dropdown) setMobileMenuOpen(false); }}
-            >
-              {link.label}
-            </a>
+            {link.href.startsWith('/') ? (
+              <Link
+                to={link.href}
+                className="navbar__link"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                href={link.href}
+                className="navbar__link"
+                onClick={() => { if (!link.dropdown) setMobileMenuOpen(false); }}
+              >
+                {link.label}
+              </a>
+            )}
+            
             {link.dropdown && (
               <div className="navbar__dropdown">
-                {link.dropdown.map((item, subIndex) => (
-                  <a
-                    key={subIndex}
-                    href={item.href}
-                    className="navbar__dropdown-link"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={item.accent ? { color: 'var(--gold)' } : {}}
-                  >
-                    {item.label}
-                  </a>
-                ))}
+                {link.dropdown.map((item, subIndex) => 
+                  item.href.startsWith('/') ? (
+                    <Link
+                      key={subIndex}
+                      to={item.href}
+                      className="navbar__dropdown-link"
+                      onClick={() => setMobileMenuOpen(false)}
+                      style={item.accent ? { color: 'var(--gold)' } : {}}
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <a
+                      key={subIndex}
+                      href={item.href}
+                      className="navbar__dropdown-link"
+                      onClick={() => setMobileMenuOpen(false)}
+                      style={item.accent ? { color: 'var(--gold)' } : {}}
+                    >
+                      {item.label}
+                    </a>
+                  )
+                )}
               </div>
             )}
           </div>
