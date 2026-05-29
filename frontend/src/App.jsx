@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
+import MatrimonyPage from './pages/MatrimonyPage';
 import DemoLogin from './components/DemoLogin';
 import './App.css';
 
@@ -16,6 +17,7 @@ function App() {
         <div className="app-content">
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/matrimony" element={<MatrimonyPage />} />
           </Routes>
         </div>
         <Footer />
