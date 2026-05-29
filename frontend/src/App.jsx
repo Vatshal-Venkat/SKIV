@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 import LandingPage from './pages/LandingPage';
 import MatrimonyPage from './pages/MatrimonyPage';
 import DemoLogin from './components/DemoLogin';
@@ -12,6 +13,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="app-layout">
         <Navbar onLoginClick={() => setIsLoginOpen(true)} />
         <div className="app-content">
