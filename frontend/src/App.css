@@ -832,6 +832,147 @@
 }
 
 /* ============================================================
+   Lekha Edition Download Panel
+   ============================================================ */
+.lekha-download-panel {
+  display: flex;
+  flex-direction: column;
+  background: rgba(21, 25, 38, 0.45);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  text-align: left;
+}
+
+.lekha-download-header {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(59, 130, 246, 0.2) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 20px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+}
+
+.lekha-download-header-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+  font-family: var(--font-heading);
+}
+
+.lekha-download-content {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lekha-edition-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: rgba(3, 7, 18, 0.3);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.lekha-edition-card:hover {
+  border-color: var(--accent-hover);
+  background: rgba(255, 255, 255, 0.02);
+  transform: translateY(-1px);
+}
+
+.lekha-edition-card.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.2);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.04) 0%, rgba(59, 130, 246, 0.04) 100%);
+}
+
+.lekha-edition-banner-container {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.lekha-edition-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition);
+}
+
+.lekha-edition-card:hover .lekha-edition-banner-img {
+  transform: scale(1.02);
+}
+
+.lekha-edition-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 10, 16, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.lekha-edition-card:hover .lekha-edition-overlay {
+  opacity: 1;
+}
+
+.lekha-download-btn-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+
+.lekha-download-btn-text {
+  font-size: 10px;
+  font-weight: 800;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-heading);
+}
+
+.lekha-edition-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: rgba(3, 7, 18, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.lekha-archives-link {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  text-align: center;
+  margin-top: 4px;
+  transition: all var(--transition-fast);
+}
+
+.lekha-archives-link:hover {
+  color: var(--accent-hover);
+  text-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+}
+
+/* ============================================================
    8. FOOTER
    ============================================================ */
 .footer {
