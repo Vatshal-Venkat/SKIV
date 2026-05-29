@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Download } from 'lucide-react';
+import lekhaEnglish from '../assets/lekha_english.png';
+import lekhaTelugu from '../assets/lekha_telugu.png';
 
 const formalAssociations = [
   'All India Sistakarana Association',
@@ -121,6 +123,51 @@ const RightSidebar = () => {
           <Link to="/matrimony" className="btn btn-secondary btn-sm btn-block" style={{ marginTop: 'var(--space-4)' }}>
             Browse Matrimony Lobby
           </Link>
+        </div>
+      </div>
+
+      {/* Download Latest Lekha */}
+      <div className="sidebar-widget lekha-download-panel">
+        <div className="lekha-download-header">
+          <h4 className="lekha-download-header-title">Download Latest "Lekha"</h4>
+        </div>
+        <div className="lekha-download-content">
+          {/* English Edition */}
+          <div className="lekha-edition-card" onClick={(e) => { e.preventDefault(); alert('Downloading English Edition...'); }}>
+            <div className="lekha-edition-banner-container">
+              <img src={lekhaEnglish} alt="Sistakaranam Lekha English" className="lekha-edition-banner-img" />
+              <div className="lekha-edition-overlay">
+                <Download className="lekha-download-btn-icon" />
+                <span className="lekha-download-btn-text">Download PDF</span>
+              </div>
+            </div>
+            <div className="lekha-edition-meta">
+              <span>May 2026</span>
+              <span>Vol 12, Issue 4</span>
+              <span>32 Pages</span>
+            </div>
+          </div>
+
+          {/* Telugu Edition */}
+          <div className="lekha-edition-card" onClick={(e) => { e.preventDefault(); alert('Downloading Telugu Edition...'); }}>
+            <div className="lekha-edition-banner-container">
+              <img src={lekhaTelugu} alt="Sistakaranam Lekha Telugu" className="lekha-edition-banner-img" />
+              <div className="lekha-edition-overlay">
+                <Download className="lekha-download-btn-icon" />
+                <span className="lekha-download-btn-text">PDF డౌన్‌లోడ్</span>
+              </div>
+            </div>
+            <div className="lekha-edition-meta">
+              <span>మే 2026</span>
+              <span>సంపుటి 12, సంచిక 4</span>
+              <span>28 పేజీలు</span>
+            </div>
+          </div>
+
+          {/* Lekha Archives Link */}
+          <a href="#" className="lekha-archives-link" onClick={(e) => e.preventDefault()}>
+            Lekha Archives
+          </a>
         </div>
       </div>
 
