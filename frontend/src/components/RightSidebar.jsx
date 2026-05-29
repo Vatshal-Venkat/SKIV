@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
 const formalAssociations = [
@@ -117,9 +118,9 @@ const RightSidebar = () => {
               <span className="profile-meta">28 Yrs • B.Tech (Software Developer) • Bangalore</span>
             </div>
           </div>
-          <button className="btn btn-secondary btn-sm btn-block" style={{ marginTop: 'var(--space-4)' }}>
+          <Link to="/matrimony" className="btn btn-secondary btn-sm btn-block" style={{ marginTop: 'var(--space-4)' }}>
             Browse Matrimony Lobby
-          </button>
+          </Link>
         </div>
       </div>
 
