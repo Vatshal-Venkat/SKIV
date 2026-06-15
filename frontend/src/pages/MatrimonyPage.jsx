@@ -6,6 +6,7 @@ const MatrimonyPage = () => {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [requestEmail, setRequestEmail] = useState('');
   const [requestStatus, setRequestStatus] = useState(null);
   
@@ -196,7 +197,7 @@ const MatrimonyPage = () => {
                   {/* Action Button */}
                   <button 
                     className="btn btn-primary btn-sm btn-block"
-                    onClick={() => setSelectedProfile(profile)}
+                    onClick={() => { setSelectedProfile(profile); setActivePhotoIndex(0); }}
                   >
                     View Details
                   </button>
@@ -219,13 +220,49 @@ const MatrimonyPage = () => {
               <X size={20} />
             </button>
 
-            {/* Header */}
+            {/* Photo Gallery (JeevanSaathi / Hinge style) */}
+            {selectedProfile.photo_urls && selectedProfile.photo_urls.length > 0 && (
+              <div style={{ marginBottom: 'var(--space-4)' }}>
+                <div style={{ width: '100%', height: '280px', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border)', position: 'relative' }}>
+                  <img 
+                    src={selectedProfile.photo_urls[activePhotoIndex]} 
+                    alt={selectedProfile.name} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  />
+                  {selectedProfile.photo_urls.length > 1 && (
+                    <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '10px', color: '#fff', fontSize: '0.68rem', fontWeight: 600 }}>
+                      {activePhotoIndex + 1} / {selectedProfile.photo_urls.length}
+                    </div>
+                  )}
+                </div>
+                {/* Thumbnails */}
+                {selectedProfile.photo_urls.length > 1 && (
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '8px', overflowX: 'auto', paddingBottom: '6px' }}>
+                    {selectedProfile.photo_urls.map((url, idx) => (
+                      <img
+                        key={idx}
+                        src={url}
+                        alt={`Thumbnail ${idx + 1}`}
+                        onClick={() => setActivePhotoIndex(idx)}
+                        style={{
+                          width: '50px',
+                          height: '50px',
+                          borderRadius: 'var(--radius-sm)',
+                          objectFit: 'cover',
+                          cursor: 'pointer',
+                          border: activePhotoIndex === idx ? '2px solid var(--accent)' : '2px solid transparent',
+                          opacity: activePhotoIndex === idx ? 1 : 0.6,
+                          transition: 'all 0.2s'
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Header info */}
             <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'center', marginBottom: 'var(--space-4)' }}>
-              <img 
-                src={selectedProfile.avatar} 
-                alt={selectedProfile.name} 
-                style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--accent)' }} 
-              />
               <div>
                 <h2 style={{ fontSize: '1.35rem', fontWeight: 700 }}>{selectedProfile.name}</h2>
                 <p style={{ color: 'var(--accent-hover)', fontSize: '0.85rem', fontWeight: 600 }}>
