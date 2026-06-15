@@ -108,7 +108,12 @@ def seed_database():
                         contact=p.get("Contact", "").strip(),
                         owner=p.get("Owner", "").strip(),
                         owner_name=p.get("OwnerName", "").strip(),
-                        photo_url=None  # Existing profiles start with no photo
+                        photo_url_1=None,  # Existing profiles start with no photo
+                        photo_url_2=None,
+                        photo_url_3=None,
+                        photo_url_4=None,
+                        photo_url_5=None,
+                        photo_url_6=None
                     )
                     db_profiles.append(db_profile)
                 
