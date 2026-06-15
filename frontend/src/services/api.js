@@ -124,8 +124,8 @@ function mapBackendProfileToFrontend(p) {
 
   const isFemale = p.gender && p.gender.toLowerCase() === 'female';
   const defaultAvatar = isFemale 
-    ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80"
-    : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80";
+    ? "/images/bride_placeholder.png"
+    : "/images/groom_placeholder.png";
 
   const getFullPhotoUrl = (path) => {
     if (!path) return null;
