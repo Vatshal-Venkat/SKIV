@@ -7,6 +7,10 @@ import ScrollToTop from './components/ScrollToTop';
 import LandingPage from './pages/LandingPage';
 import MatrimonyPage from './pages/MatrimonyPage';
 import AdminPage from './pages/AdminPage';
+import NewsDetailPage from './pages/NewsDetailPage';
+import JobsPage from './pages/JobsPage';
+import EventsPage from './pages/EventsPage';
+import DirectoryPage from './pages/DirectoryPage';
 import DemoLogin from './components/DemoLogin';
 import { apiService } from './services/api';
 import './App.css';
@@ -46,8 +50,13 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/matrimony" element={<MatrimonyPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/news/:id" element={<NewsDetailPage />} />
+            <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/directory" element={<DirectoryPage />} />
           </Routes>
         </div>
+
         <Footer />
         {isLoginOpen && (
           <DemoLogin 

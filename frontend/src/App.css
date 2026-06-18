@@ -1358,3 +1358,15 @@
   justify-content: center;
   flex-shrink: 0;
 }
+
+/* Link Card layout fixes */
+a.stat-card {
+  text-decoration: none;
+  display: block;
+}
+
+a.news-article__image {
+  text-decoration: none;
+  display: block;
+}
+

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Users, Briefcase, Heart, Calendar, Info } from 'lucide-react';
 import { apiService } from '../services/api';
 
@@ -32,6 +33,36 @@ const NewsFeed = () => {
     }
   };
 
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+      return pages;
+    }
+    
+    pages.push(1);
+    
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+    
+    if (start > 2) {
+      pages.push('...');
+    }
+    
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    
+    if (end < totalPages - 1) {
+      pages.push('...');
+    }
+    
+    pages.push(totalPages);
+    return pages;
+  };
+
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentArticles = articles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
@@ -39,37 +70,37 @@ const NewsFeed = () => {
     <div className="news-feed">
       {/* Interactive Stats Dashboard */}
       <div className="stats-dashboard">
-        <div className="stat-card">
+        <Link to="/directory" className="stat-card">
           <div className="stat-card__icon" style={{ color: 'var(--accent)' }}>
             <Users size={20} />
           </div>
           <div className="stat-card__value">4,850+</div>
           <div className="stat-card__label">Members</div>
-        </div>
+        </Link>
 
-        <div className="stat-card">
+        <Link to="/jobs" className="stat-card">
           <div className="stat-card__icon" style={{ color: 'var(--success)' }}>
             <Briefcase size={20} />
           </div>
           <div className="stat-card__value">28 Active</div>
           <div className="stat-card__label">Jobs Portal</div>
-        </div>
+        </Link>
 
-        <div className="stat-card">
+        <Link to="/matrimony" className="stat-card">
           <div className="stat-card__icon" style={{ color: 'var(--gold)' }}>
             <Heart size={20} />
           </div>
           <div className="stat-card__value">359 Matches</div>
           <div className="stat-card__label">Matrimony</div>
-        </div>
+        </Link>
 
-        <div className="stat-card">
+        <Link to="/events" className="stat-card">
           <div className="stat-card__icon" style={{ color: 'var(--danger)' }}>
             <Calendar size={20} />
           </div>
           <div className="stat-card__value">3 Events</div>
           <div className="stat-card__label">Scheduled</div>
-        </div>
+        </Link>
       </div>
 
       {/* Welcome Banner */}
@@ -107,24 +138,26 @@ const NewsFeed = () => {
             <div className="news-list">
               {currentArticles.map((article) => (
                 <article key={article.id} className="news-article">
-                  <div className="news-article__image">
+                  <Link to={`/news/${article.id}`} className="news-article__image">
                     <img
                       src={article.images[0]}
                       alt={article.title}
                       className="news-article__thumb"
                     />
-                  </div>
+                  </Link>
                   <div className="news-article__content">
                     <div className="news-article__meta">
                       <span className="news-article__category">{article.category}</span>
                       <span className="news-article__date">{article.date}</span>
                     </div>
-                    <h3 className="news-article__title">{article.title}</h3>
+                    <Link to={`/news/${article.id}`} style={{ textDecoration: 'none' }}>
+                      <h3 className="news-article__title">{article.title}</h3>
+                    </Link>
                     <p className="news-article__excerpt">{article.excerpt}</p>
                     <div className="news-article__footer">
-                      <a href="#" className="news-article__read-more">
+                      <Link to={`/news/${article.id}`} className="news-article__read-more">
                         READ MORE..
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </article>
@@ -143,16 +176,22 @@ const NewsFeed = () => {
                   <ChevronLeft size={16} />
                 </button>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    className={`pagination__btn ${
-                      page === currentPage ? 'pagination__btn--active' : ''
-                    }`}
-                    onClick={() => handlePageChange(page)}
-                  >
-                    {page}
-                  </button>
+                {getPageNumbers().map((page, idx) => (
+                  page === '...' ? (
+                    <span key={`dots-${idx}`} className="pagination__dots" style={{ padding: '0 8px', color: 'var(--text-muted)' }}>
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      className={`pagination__btn ${
+                        page === currentPage ? 'pagination__btn--active' : ''
+                      }`}
+                      onClick={() => handlePageChange(page)}
+                    >
+                      {page}
+                    </button>
+                  )
                 ))}
 
                 <button
