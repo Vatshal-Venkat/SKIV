@@ -1,25 +1,40 @@
 import { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { apiService } from '../services/api';
 
-const DemoLogin = ({ onClose }) => {
+const DemoLogin = ({ onClose, onLoginSuccess }) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('demo@skiv.online');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('admin');
+  const [password, setPassword] = useState('admin123');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
+
     if (isSignUp) {
-      // Demo sign up placeholder
+      // Sign up placeholder
       console.log('Registering:', { name, email, password });
+      setError('Registration is not supported on this demo build. Please use the default admin credentials to login.');
+      setLoading(false);
     } else {
-      // Demo login placeholder
-      console.log('Logging in:', { email, password });
+      try {
+        const data = await apiService.login(email, password);
+        if (onLoginSuccess) {
+          onLoginSuccess(data.user);
+        }
+      } catch (err) {
+        setError(err.message || 'Login failed. Please verify your credentials.');
+      } finally {
+        setLoading(false);
+      }
     }
-    onClose();
   };
 
   const handleOverlayClick = (e) => {
@@ -48,6 +63,12 @@ const DemoLogin = ({ onClose }) => {
           </p>
         </div>
 
+        {error && (
+          <div className="error-message" style={{ color: '#ff4d4d', background: 'rgba(255, 77, 77, 0.1)', padding: '10px 15px', borderRadius: '4px', marginBottom: '15px', fontSize: '0.85rem', textAlign: 'center', border: '1px solid rgba(255, 77, 77, 0.2)' }}>
+            {error}
+          </div>
+        )}
+
         <form className="demo-login__form" onSubmit={handleSubmit}>
           {isSignUp && (
             <div className="form-group demo-login__input-group">
@@ -66,9 +87,9 @@ const DemoLogin = ({ onClose }) => {
           <div className="form-group demo-login__input-group">
             <Mail size={18} className="demo-login__input-icon" />
             <input
-              type="email"
+              type="text"
               className="form-input demo-login__input"
-              placeholder="Email address"
+              placeholder="Username or Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -120,8 +141,8 @@ const DemoLogin = ({ onClose }) => {
             </label>
           )}
 
-          <button type="submit" className="btn btn-primary btn-block">
-            {isSignUp ? 'Sign Up' : 'Login'}
+          <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+            {loading ? 'Logging in...' : isSignUp ? 'Sign Up' : 'Login'}
           </button>
 
           <p className="demo-login__signup-prompt">

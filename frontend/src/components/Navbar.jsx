@@ -77,7 +77,7 @@ const navLinks = [
   }
 ];
 
-const Navbar = ({ onLoginClick }) => {
+const Navbar = ({ onLoginClick, currentUser, onLogout }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -186,8 +186,22 @@ const Navbar = ({ onLoginClick }) => {
           </form>
 
           {/* Auth Button */}
-          <div className="navbar__auth" style={{ marginLeft: '4px' }}>
-            <button className="btn btn-primary btn-sm" onClick={onLoginClick}>Login</button>
+          <div className="navbar__auth" style={{ marginLeft: '4px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {currentUser ? (
+              <>
+                <span className="navbar__user-welcome" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                  Hello, <strong>{currentUser.display_name || currentUser.username}</strong>
+                </span>
+                {currentUser.is_admin && (
+                  <Link to="/admin" className="btn btn-secondary btn-sm" style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}>
+                    Admin Panel
+                  </Link>
+                )}
+                <button className="btn btn-outline btn-sm" onClick={onLogout}>Logout</button>
+              </>
+            ) : (
+              <button className="btn btn-primary btn-sm" onClick={onLoginClick}>Login</button>
+            )}
           </div>
 
           <button
@@ -253,7 +267,21 @@ const Navbar = ({ onLoginClick }) => {
         ))}
         
         <div className="navbar__mobile-auth" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
-          <button className="btn btn-primary btn-sm" onClick={() => { onLoginClick(); setMobileMenuOpen(false); }}>Login</button>
+          {currentUser ? (
+            <>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center' }}>
+                Hello, <strong>{currentUser.display_name || currentUser.username}</strong>
+              </span>
+              {currentUser.is_admin && (
+                <Link to="/admin" className="btn btn-secondary btn-sm" onClick={() => setMobileMenuOpen(false)}>
+                  Admin Panel
+                </Link>
+              )}
+              <button className="btn btn-outline btn-sm" onClick={() => { onLogout(); setMobileMenuOpen(false); }}>Logout</button>
+            </>
+          ) : (
+            <button className="btn btn-primary btn-sm" onClick={() => { onLoginClick(); setMobileMenuOpen(false); }}>Login</button>
+          )}
         </div>
 
         <div className="navbar__mobile-social">
