@@ -181,6 +181,16 @@
   z-index: var(--z-dropdown);
 }
 
+.navbar__dropdown::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 0;
+  right: 0;
+  height: 15px;
+  background: transparent;
+}
+
 .navbar__item:hover .navbar__dropdown {
   opacity: 1;
   visibility: visible;
@@ -1134,6 +1144,28 @@
 
 .demo-login__input {
   padding-left: 44px;
+  padding-right: 44px;
+}
+
+.demo-login__password-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+  z-index: 2;
+}
+
+.demo-login__password-toggle:hover {
+  color: var(--text-primary);
 }
 
 .demo-login__input-icon {

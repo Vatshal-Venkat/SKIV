@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import LandingPage from './pages/LandingPage';
 import MatrimonyPage from './pages/MatrimonyPage';
+import AdminPage from './pages/AdminPage';
 import DemoLogin from './components/DemoLogin';
 import { apiService } from './services/api';
 import './App.css';
@@ -36,6 +37,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/matrimony" element={<MatrimonyPage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </div>
         <Footer />

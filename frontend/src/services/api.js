@@ -342,6 +342,37 @@ export const apiService = {
     return mapBackendNewsToFrontend(data);
   },
 
+  async updateNewsArticle(id, newsData) {
+    const response = await fetch(`${API_BASE_URL}/news/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(newsData)
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || "Failed to update article.");
+    }
+
+    const data = await response.json();
+    return mapBackendNewsToFrontend(data);
+  },
+
+  async deleteNewsArticle(id) {
+    const response = await fetch(`${API_BASE_URL}/news/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete article.");
+    }
+    return true;
+  },
+
   // Upload photo endpoint
   async uploadPhoto(file) {
     const formData = new FormData();
