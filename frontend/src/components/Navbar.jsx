@@ -186,12 +186,9 @@ const Navbar = ({ onLoginClick, currentUser, onLogout }) => {
           </form>
 
           {/* Auth Button */}
-          <div className="navbar__auth" style={{ marginLeft: '4px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="navbar__auth" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
             {currentUser ? (
               <>
-                <span className="navbar__user-welcome" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                  Hello, <strong>{currentUser.display_name || currentUser.username}</strong>
-                </span>
                 {currentUser.is_admin && (
                   <Link to="/admin" className="btn btn-secondary btn-sm" style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}>
                     Admin Panel
