@@ -1,6 +1,7 @@
 // SKIV.ONLINE - CMS API & Database Service (Connected to FastAPI Backend)
 
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
+const API_HOST_URL = API_BASE_URL.endsWith('/api') ? API_BASE_URL.slice(0, -4) : API_BASE_URL;
 
 // Helper to get auth headers
 const getAuthHeaders = () => {
@@ -129,7 +130,7 @@ function mapBackendProfileToFrontend(p) {
 
   const getFullPhotoUrl = (path) => {
     if (!path) return null;
-    return path.startsWith('http') ? path : `http://localhost:8000${path}`;
+    return path.startsWith('http') ? path : `${API_HOST_URL}${path}`;
   };
 
   const primaryPhoto = getFullPhotoUrl(p.photo_url_1) || defaultAvatar;
@@ -175,7 +176,7 @@ function mapBackendNewsToFrontend(a) {
     excerpt: a.summary || (a.body.substring(0, 150) + "..."),
     content: a.body,
     images: a.thumbnail_url 
-      ? [a.thumbnail_url.startsWith('http') ? a.thumbnail_url : `http://localhost:8000${a.thumbnail_url}`] 
+      ? [a.thumbnail_url.startsWith('http') ? a.thumbnail_url : `${API_HOST_URL}${a.thumbnail_url}`] 
       : ['https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&auto=format&fit=crop&q=80'],
     date: formattedDate,
     author: "Administrator"

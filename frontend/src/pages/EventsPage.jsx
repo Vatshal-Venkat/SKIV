@@ -198,6 +198,7 @@ const EventsPage = () => {
           );
         })}
       </div>
+    )}
 
       {/* Modal: RSVP registration */}
       {rsvpFormOpen && (
