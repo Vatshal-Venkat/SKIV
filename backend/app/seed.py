@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.database import Base, engine, SessionLocal
-from app.models.models import Profile, User, News
+from app.models.models import Profile, User, News, Event, Job, DirectoryMember
 from app.services.auth import AuthService
 
 def seed_database():
@@ -125,6 +125,188 @@ def seed_database():
                 print(f"objects3.json not found at {json_path}!")
         else:
             print(f"Matrimony profiles already seeded ({profile_count} profiles in DB).")
+            
+        # 5. Seed Events
+        event_count = db.query(Event).count()
+        if event_count == 0:
+            print("Seeding sample events...")
+            sample_events = [
+                Event(
+                    title="Sistakaranam Annual General Gathering 2026",
+                    date="July 12, 2026",
+                    time="10:00 AM - 5:00 PM",
+                    location="Sistakaranam Community Hall, Visakhapatnam, AP",
+                    organizer="All India Sistakarana Association",
+                    description="Our grand annual meet to discuss community development projects, student scholarships distribution, senior member felicitations, and cultural programs. A community feast (Mahaprasadam) will follow in the afternoon.",
+                    registrations=342,
+                    status="Open"
+                ),
+                Event(
+                    title="Youth Career & Startup Mentorship Workshop",
+                    date="August 2, 2026",
+                    time="2:00 PM - 6:00 PM",
+                    location="Vande Mataram Auditorium, Hyderabad, TS (and Zoom Hybrid)",
+                    organizer="Sistakaranam Welfare Association, Hyderabad",
+                    description="A specialized mentorship camp matching student aspirants and budding entrepreneurs with community business leaders, executives, and academics. Covers resume building, startup pitching, and IT job referrals.",
+                    registrations=154,
+                    status="Open"
+                ),
+                Event(
+                    title="Shivaratri Cultural Celebrations & Cricket Cup",
+                    date="March 8, 2026 (Passed)",
+                    time="All Night Event",
+                    location="Railway Grounds, Kharagpur, WB",
+                    organizer="Sista Karana Association, Kharagpur",
+                    description="Annual cultural night celebrating Shivaratri with local hymns, classical dance dramas, and our signature floodlight cricket tournament. Over 16 youth teams participated in this memorable night.",
+                    registrations=450,
+                    status="Closed"
+                )
+            ]
+            db.add_all(sample_events)
+            db.commit()
+            print("Sample events seeded.")
+        else:
+            print(f"Events already seeded ({event_count} events in DB).")
+
+        # 6. Seed Jobs
+        job_count = db.query(Job).count()
+        if job_count == 0:
+            print("Seeding sample jobs...")
+            sample_jobs = [
+                Job(
+                    title="Senior Full Stack Developer",
+                    company="Dhwani Voice Tech",
+                    category="IT / Tech",
+                    location="Hyderabad, TS (Hybrid)",
+                    salary="₹18,00,000 - ₹24,00,000 / year",
+                    posted="2 days ago",
+                    type="Full-Time",
+                    experience="5+ Years",
+                    skills="React, Python, FastAPI, MySQL",
+                    description="Looking for an experienced engineer to lead development of our voice recognition and AI automation services. You will design scalable database models and coordinate integrations."
+                ),
+                Job(
+                    title="Accountant & Tax Consultant",
+                    company="COLAND & Co. Financials",
+                    category="Accounts / Finance",
+                    location="Visakhapatnam, AP (On-site)",
+                    salary="₹4,50,000 - ₹6,00,000 / year",
+                    posted="3 days ago",
+                    type="Full-Time",
+                    experience="2+ Years",
+                    skills="GST Filing, Tally Prime, Income Tax, Excel",
+                    description="Seeking a detail-oriented accountant to manage client files, audit tax declarations, and coordinate GST reconciliation schedules. Friendly office environment."
+                ),
+                Job(
+                    title="Data Analyst Intern",
+                    company="Chakra Analytics Services",
+                    category="IT / Tech",
+                    location="Remote (India)",
+                    salary="₹25,000 - ₹35,000 / month",
+                    posted="1 day ago",
+                    type="Internship (6 Months)",
+                    experience="Freshers Welcome",
+                    skills="SQL, Excel, Tableau, PowerBI",
+                    description="Perfect opportunity for final-year students or fresh graduates to get hands-on experience in business intelligence pipelines. Work with top data mentors."
+                ),
+                Job(
+                    title="Project Coordinator",
+                    company="Sistla Infrastructures",
+                    category="Management",
+                    location="Bangalore, KA (On-site)",
+                    salary="₹8,00,000 - ₹11,00,000 / year",
+                    posted="1 week ago",
+                    type="Full-Time",
+                    experience="3+ Years",
+                    skills="Agile, MS Project, Communication, Scrum",
+                    description="Coordinate cross-functional civil and telecom infrastructure projects. Oversee material schedules, contractor tasks, and weekly compliance reports."
+                ),
+                Job(
+                    title="Administrative Assistant",
+                    company="SKIV Welfare Foundation",
+                    category="Office Admin",
+                    location="Bhubaneswar, Odisha (On-site)",
+                    salary="₹3,00,000 - ₹4,20,000 / year",
+                    posted="5 days ago",
+                    type="Part-Time",
+                    experience="1+ Years",
+                    skills="Office Docs, Coordination, Billing, Data Entry",
+                    description="Manage day-to-day office coordination tasks, register new applicants, organize files, and dispatch certificates for our community programs."
+                )
+            ]
+            db.add_all(sample_jobs)
+            db.commit()
+            print("Sample jobs seeded.")
+        else:
+            print(f"Jobs already seeded ({job_count} jobs in DB).")
+
+        # 7. Seed Directory Members
+        member_count = db.query(DirectoryMember).count()
+        if member_count == 0:
+            print("Seeding sample directory members...")
+            sample_members = [
+                DirectoryMember(
+                    name="Dr. Ramesh Patnaik",
+                    gotram="Gautama",
+                    profession="Retired Professor & Historian",
+                    location="Visakhapatnam, AP",
+                    specialization="Educational Counselling & Cultural History",
+                    contact="ramesh.patnaik@skiv.online",
+                    phone="+91 94401 XXXXX"
+                ),
+                DirectoryMember(
+                    name="Sri D.S. Bharat",
+                    gotram="Bharadwaja",
+                    profession="Senior IT Executive",
+                    location="Noida, Delhi-NCR",
+                    specialization="Software Architecture & Career Mentorship",
+                    contact="ds.bharat@gmail.com",
+                    phone="+91 98112 XXXXX"
+                ),
+                DirectoryMember(
+                    name="Smt. G. Varalakshmi",
+                    gotram="Srivatsa",
+                    profession="Social Worker & Cultural Advisor",
+                    location="Hyderabad, TS",
+                    specialization="Women Welfare & Community Organizing",
+                    contact="varalakshmi.g@skiv.online",
+                    phone="+91 98490 XXXXX"
+                ),
+                DirectoryMember(
+                    name="Sri Kuppili Bhimeshwara Rao",
+                    gotram="Kasyapa",
+                    profession="Business Owner & Industrialist",
+                    location="Kharagpur, WB",
+                    specialization="Small Scale Industries & Local Employment",
+                    contact="kuppili.brao@outlook.com",
+                    phone="+91 98322 XXXXX"
+                ),
+                DirectoryMember(
+                    name="Sri Sekharamantri Prabhakara Rao",
+                    gotram="Vasishta",
+                    profession="Chartered Accountant",
+                    location="Bhubaneswar, Odisha",
+                    specialization="Tax Compliance, Audits & NGO Accounting",
+                    contact="sp.rao.ca@gmail.com",
+                    phone="+91 99370 XXXXX"
+                ),
+                DirectoryMember(
+                    name="Neha Patnaik",
+                    gotram="Gautama",
+                    profession="Chartered Financial Analyst (CFA)",
+                    location="Raipur, Chhattisgarh",
+                    specialization="Investment Banking & Corporate Finance",
+                    contact="neha.patnaik@skiv.online",
+                    phone="+91 78822 XXXXX"
+                )
+            ]
+            db.add_all(sample_members)
+            db.commit()
+            print("Sample directory members seeded.")
+        else:
+            print(f"Directory members already seeded ({member_count} members in DB).")
+            
+        print("All seeds verified.")
             
     except Exception as e:
         print(f"Error during seeding: {e}")

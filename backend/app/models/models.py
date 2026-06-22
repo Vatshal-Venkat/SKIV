@@ -67,3 +67,47 @@ class Profile(Base):
     photo_url_5 = Column(String(255), nullable=True)     # Optional photo 5
     photo_url_6 = Column(String(255), nullable=True)     # Optional photo 6
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class Event(Base):
+    __tablename__ = "events"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(255), nullable=False)
+    date = Column(String(100), nullable=False)
+    time = Column(String(100), nullable=True)
+    location = Column(String(255), nullable=False)
+    organizer = Column(String(200), nullable=True)
+    description = Column(Text, nullable=True)
+    registrations = Column(Integer, default=0, nullable=False)
+    status = Column(String(50), default="Open", nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class Job(Base):
+    __tablename__ = "jobs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(255), nullable=False)
+    company = Column(String(255), nullable=False)
+    category = Column(String(100), nullable=False, default="IT / Tech")
+    location = Column(String(255), nullable=False)
+    salary = Column(String(100), nullable=True)
+    posted = Column(String(100), nullable=True)
+    type = Column(String(100), nullable=False, default="Full-Time")
+    experience = Column(String(100), nullable=True)
+    skills = Column(Text, nullable=True)
+    description = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class DirectoryMember(Base):
+    __tablename__ = "directory_members"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(200), nullable=False)
+    gotram = Column(String(100), nullable=True)
+    profession = Column(String(200), nullable=False)
+    location = Column(String(200), nullable=False)
+    specialization = Column(Text, nullable=True)
+    contact = Column(String(100), nullable=True)
+    phone = Column(String(100), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
