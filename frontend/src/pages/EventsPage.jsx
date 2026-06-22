@@ -1,62 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, MapPin, Users, Check, AlertTriangle } from 'lucide-react';
-
-const MOCK_EVENTS = [
-  {
-    id: 1,
-    title: "Sistakaranam Annual General Gathering 2026",
-    date: "July 12, 2026",
-    time: "10:00 AM - 5:00 PM",
-    location: "Sistakaranam Community Hall, Visakhapatnam, AP",
-    organizer: "All India Sistakarana Association",
-    description: "Our grand annual meet to discuss community development projects, student scholarships distribution, senior member felicitations, and cultural programs. A community feast (Mahaprasadam) will follow in the afternoon.",
-    registrations: 342,
-    status: "Open"
-  },
-  {
-    id: 2,
-    title: "Youth Career & Startup Mentorship Workshop",
-    date: "August 2, 2026",
-    time: "2:00 PM - 6:00 PM",
-    location: "Vande Mataram Auditorium, Hyderabad, TS (and Zoom Hybrid)",
-    organizer: "Sistakaranam Welfare Association, Hyderabad",
-    description: "A specialized mentorship camp matching student aspirants and budding entrepreneurs with community business leaders, executives, and academics. Covers resume building, startup pitching, and IT job referrals.",
-    registrations: 154,
-    status: "Open"
-  },
-  {
-    id: 3,
-    title: "Shivaratri Cultural Celebrations & Cricket Cup",
-    date: "March 8, 2026 (Passed)",
-    time: "All Night Event",
-    location: "Railway Grounds, Kharagpur, WB",
-    organizer: "Sista Karana Association, Kharagpur",
-    description: "Annual cultural night celebrating Shivaratri with local hymns, classical dance dramas, and our signature floodlight cricket tournament. Over 16 youth teams participated in this memorable night.",
-    registrations: 450,
-    status: "Closed"
-  }
-];
+import { apiService } from '../services/api';
 
 const EventsPage = () => {
   const navigate = useNavigate();
-  const [events, setEvents] = useState(MOCK_EVENTS);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [rsvpState, setRsvpState] = useState({}); // { eventId: 'registered' }
   const [rsvpFormOpen, setRsvpFormOpen] = useState(null); // eventId
   const [rsvpInput, setRsvpInput] = useState({ name: '', email: '', count: '1' });
   const [rsvpSuccess, setRsvpSuccess] = useState(false);
 
-  const handleRsvpSubmit = (e) => {
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await apiService.getEvents();
+      setEvents(data);
+    } catch (err) {
+      setError("Failed to fetch events from database.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRsvpSubmit = async (e) => {
     e.preventDefault();
     setRsvpSuccess(true);
     
-    // Update local state registrations count
-    setEvents(events.map(ev => {
-      if (ev.id === rsvpFormOpen) {
-        return { ...ev, registrations: ev.registrations + parseInt(rsvpInput.count) };
-      }
-      return ev;
-    }));
+    try {
+      const count = parseInt(rsvpInput.count) || 1;
+      await apiService.rsvpEvent(rsvpFormOpen, count);
+      await fetchEvents();
+    } catch (err) {
+      console.error("Failed to submit RSVP:", err);
+    }
 
     setTimeout(() => {
       setRsvpState({ ...rsvpState, [rsvpFormOpen]: true });
@@ -64,6 +48,19 @@ const EventsPage = () => {
       setRsvpSuccess(false);
       setRsvpInput({ name: '', email: '', count: '1' });
     }, 2000);
+  };
+
+  const getParsedDate = (dateStr) => {
+    try {
+      const parts = dateStr.split(',');
+      const monthDay = parts[0].trim().split(' ');
+      const month = monthDay[0] || 'DATE';
+      const day = monthDay[1] || '';
+      const year = parts[1] ? parts[1].replace(/\(Passed\)/i, '').trim() : '';
+      return { month, day, year };
+    } catch (e) {
+      return { month: 'DATE', day: '', year: dateStr };
+    }
   };
 
   return (
@@ -91,52 +88,70 @@ const EventsPage = () => {
       </div>
 
       {/* Events List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        {events.map(ev => {
-          const isClosed = ev.status === "Closed" || ev.title.includes("Passed");
-          const isRegistered = rsvpState[ev.id];
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
+          <div className="spinner" style={{ border: '3px solid var(--border)', borderTop: '3px solid var(--accent)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4)' }}></div>
+          Loading events...
+        </div>
+      ) : error ? (
+        <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+          <AlertTriangle size={36} style={{ color: '#ef4444', marginBottom: '12px' }} />
+          <p>{error}</p>
+        </div>
+      ) : events.length === 0 ? (
+        <div className="glass-panel" style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+          <Calendar size={40} style={{ color: 'var(--text-muted)', marginBottom: '12px' }} />
+          <h3>No events found.</h3>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {events.map(ev => {
+            const isClosed = ev.status === "Closed" || ev.title.includes("Passed") || ev.date.includes("Passed");
+            const isRegistered = rsvpState[ev.id];
+            const { month, day, year } = getParsedDate(ev.date);
 
-          return (
-            <div 
-              key={ev.id} 
-              className="glass-panel"
-              style={{ 
-                padding: 'var(--space-6)', 
-                border: '1px solid var(--border)', 
-                borderRadius: 'var(--radius-lg)',
-                display: 'grid',
-                gridTemplateColumns: 'auto 1fr auto',
-                gap: '24px',
-                alignItems: 'center',
-                opacity: isClosed ? 0.75 : 1
-              }}
-            >
-              {/* Date Box */}
+            return (
               <div 
+                key={ev.id} 
+                className="glass-panel"
                 style={{ 
-                  width: '90px', 
-                  height: '90px', 
-                  borderRadius: 'var(--radius-md)', 
-                  border: `1px solid ${isClosed ? 'var(--border)' : 'var(--accent)'}`,
-                  background: isClosed ? 'rgba(255,255,255,0.01)' : 'var(--accent-glow)',
-                  display: 'flex',
-                  flexDirection: 'column',
+                  padding: 'var(--space-6)', 
+                  border: '1px solid var(--border)', 
+                  borderRadius: 'var(--radius-lg)',
+                  display: 'grid',
+                  gridTemplateColumns: 'auto 1fr auto',
+                  gap: '24px',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  padding: '8px'
+                  opacity: isClosed ? 0.75 : 1
                 }}
               >
-                <span style={{ fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', color: isClosed ? 'var(--text-muted)' : 'var(--accent)' }}>
-                  {ev.date.split(',')[0].split(' ')[0]}
-                </span>
-                <span style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: '1' }}>
-                  {ev.date.split(',')[0].split(' ')[1]}
-                </span>
-                <span style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-                  {ev.date.split(',')[1]?.trim()}
-                </span>
-              </div>
+                {/* Date Box */}
+                <div 
+                  style={{ 
+                    width: '90px', 
+                    height: '90px', 
+                    borderRadius: 'var(--radius-md)', 
+                    border: `1px solid ${isClosed ? 'var(--border)' : 'var(--accent)'}`,
+                    background: isClosed ? 'rgba(255,255,255,0.01)' : 'var(--accent-glow)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    padding: '8px'
+                  }}
+                >
+                  <span style={{ fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', color: isClosed ? 'var(--text-muted)' : 'var(--accent)' }}>
+                    {month}
+                  </span>
+                  <span style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: '1' }}>
+                    {day}
+                  </span>
+                  <span style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                    {year}
+                  </span>
+                </div>
+
 
               {/* Details */}
               <div>

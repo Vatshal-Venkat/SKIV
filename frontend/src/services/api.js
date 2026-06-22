@@ -434,5 +434,181 @@ export const apiService = {
   // Associations endpoints (Mocked)
   async getAssociations() {
     return ASSOCIATIONS;
+  },
+
+  // Events endpoints (Connected to DB)
+  async getEvents() {
+    const response = await fetch(`${API_BASE_URL}/events`);
+    if (!response.ok) throw new Error("Failed to fetch events.");
+    return await response.json();
+  },
+
+  async createEvent(eventData) {
+    const response = await fetch(`${API_BASE_URL}/events`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(eventData)
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || "Failed to create event.");
+    }
+    return await response.json();
+  },
+
+  async updateEvent(id, eventData) {
+    const response = await fetch(`${API_BASE_URL}/events/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(eventData)
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || "Failed to update event.");
+    }
+    return await response.json();
+  },
+
+  async rsvpEvent(id, count = 1) {
+    const response = await fetch(`${API_BASE_URL}/events/rsvp/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ count })
+    });
+    if (!response.ok) throw new Error("Failed to submit RSVP.");
+    return await response.json();
+  },
+
+  async deleteEvent(id) {
+    const response = await fetch(`${API_BASE_URL}/events/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error("Failed to delete event.");
+    return true;
+  },
+
+  // Jobs endpoints (Connected to DB)
+  async getJobs() {
+    const response = await fetch(`${API_BASE_URL}/jobs`);
+    if (!response.ok) throw new Error("Failed to fetch job postings.");
+    const data = await response.json();
+    return data.map(job => ({
+      ...job,
+      skills: job.skills ? job.skills.split(',').map(s => s.trim()) : []
+    }));
+  },
+
+  async createJob(jobData) {
+    const payload = {
+      ...jobData,
+      skills: Array.isArray(jobData.skills) ? jobData.skills.join(', ') : jobData.skills
+    };
+    const response = await fetch(`${API_BASE_URL}/jobs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || "Failed to create job posting.");
+    }
+    const data = await response.json();
+    return {
+      ...data,
+      skills: data.skills ? data.skills.split(',').map(s => s.trim()) : []
+    };
+  },
+
+  async updateJob(id, jobData) {
+    const payload = {
+      ...jobData,
+      skills: Array.isArray(jobData.skills) ? jobData.skills.join(', ') : jobData.skills
+    };
+    const response = await fetch(`${API_BASE_URL}/jobs/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || "Failed to update job posting.");
+    }
+    const data = await response.json();
+    return {
+      ...data,
+      skills: data.skills ? data.skills.split(',').map(s => s.trim()) : []
+    };
+  },
+
+  async deleteJob(id) {
+    const response = await fetch(`${API_BASE_URL}/jobs/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error("Failed to delete job posting.");
+    return true;
+  },
+
+  // Directory endpoints (Connected to DB)
+  async getDirectory() {
+    const response = await fetch(`${API_BASE_URL}/directory`);
+    if (!response.ok) throw new Error("Failed to fetch directory members.");
+    return await response.json();
+  },
+
+  async createDirectoryMember(memberData) {
+    const response = await fetch(`${API_BASE_URL}/directory`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(memberData)
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || "Failed to add directory member.");
+    }
+    return await response.json();
+  },
+
+  async updateDirectoryMember(id, memberData) {
+    const response = await fetch(`${API_BASE_URL}/directory/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(memberData)
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || "Failed to update directory member.");
+    }
+    return await response.json();
+  },
+
+  async deleteDirectoryMember(id) {
+    const response = await fetch(`${API_BASE_URL}/directory/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error("Failed to delete directory member.");
+    return true;
   }
 };

@@ -1,78 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Briefcase, MapPin, DollarSign, Calendar, Plus, Check, Info } from 'lucide-react';
-
-const MOCK_JOBS = [
-  {
-    id: 1,
-    title: "Senior Full Stack Developer",
-    company: "Dhwani Voice Tech",
-    category: "IT / Tech",
-    location: "Hyderabad, TS (Hybrid)",
-    salary: "₹18,00,000 - ₹24,00,000 / year",
-    posted: "2 days ago",
-    type: "Full-Time",
-    experience: "5+ Years",
-    skills: ["React", "Python", "FastAPI", "MySQL"],
-    description: "Looking for an experienced engineer to lead development of our voice recognition and AI automation services. You will design scalable database models and coordinate integrations."
-  },
-  {
-    id: 2,
-    title: "Accountant & Tax Consultant",
-    company: "COLAND & Co. Financials",
-    category: "Accounts / Finance",
-    location: "Visakhapatnam, AP (On-site)",
-    salary: "₹4,50,000 - ₹6,00,000 / year",
-    posted: "3 days ago",
-    type: "Full-Time",
-    experience: "2+ Years",
-    skills: ["GST Filing", "Tally Prime", "Income Tax", "Excel"],
-    description: "Seeking a detail-oriented accountant to manage client files, audit tax declarations, and coordinate GST reconciliation schedules. Friendly office environment."
-  },
-  {
-    id: 3,
-    title: "Data Analyst Intern",
-    company: "Chakra Analytics Services",
-    category: "IT / Tech",
-    location: "Remote (India)",
-    salary: "₹25,000 - ₹35,000 / month",
-    posted: "1 day ago",
-    type: "Internship (6 Months)",
-    experience: "Freshers Welcome",
-    skills: ["SQL", "Excel", "Tableau", "PowerBI"],
-    description: "Perfect opportunity for final-year students or fresh graduates to get hands-on experience in business intelligence pipelines. Work with top data mentors."
-  },
-  {
-    id: 4,
-    title: "Project Coordinator",
-    company: "Sistla Infrastructures",
-    category: "Management",
-    location: "Bangalore, KA (On-site)",
-    salary: "₹8,00,000 - ₹11,00,000 / year",
-    posted: "1 week ago",
-    type: "Full-Time",
-    experience: "3+ Years",
-    skills: ["Agile", "MS Project", "Communication", "Scrum"],
-    description: "Coordinate cross-functional civil and telecom infrastructure projects. Oversee material schedules, contractor tasks, and weekly compliance reports."
-  },
-  {
-    id: 5,
-    title: "Administrative Assistant",
-    company: "SKIV Welfare Foundation",
-    category: "Office Admin",
-    location: "Bhubaneswar, Odisha (On-site)",
-    salary: "₹3,00,000 - ₹4,20,000 / year",
-    posted: "5 days ago",
-    type: "Part-Time",
-    experience: "1+ Years",
-    skills: ["Office Docs", "Coordination", "Billing", "Data Entry"],
-    description: "Manage day-to-day office coordination tasks, register new applicants, organize files, and dispatch certificates for our community programs."
-  }
-];
+import { ArrowLeft, Search, Briefcase, MapPin, DollarSign, Calendar, Plus, Check, Info, AlertTriangle } from 'lucide-react';
+import { apiService } from '../services/api';
 
 const JobsPage = () => {
   const navigate = useNavigate();
-  const [jobs, setJobs] = useState(MOCK_JOBS);
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   
@@ -87,6 +22,23 @@ const JobsPage = () => {
     title: '', company: '', category: 'IT / Tech', location: '', salary: '', experience: '', skills: '', description: ''
   });
 
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await apiService.getJobs();
+      setJobs(data);
+    } catch (err) {
+      setError("Failed to fetch jobs from database.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleApplySubmit = (e) => {
     e.preventDefault();
     setApplySuccess(true);
@@ -97,26 +49,31 @@ const JobsPage = () => {
     }, 2500);
   };
 
-  const handlePostSubmit = (e) => {
+  const handlePostSubmit = async (e) => {
     e.preventDefault();
     const newJob = {
-      id: jobs.length + 1,
       title: postForm.title,
       company: postForm.company,
       category: postForm.category,
       location: postForm.location,
-      salary: postForm.salary || "Negotatable",
+      salary: postForm.salary || "Negotiable",
       posted: "Just now",
       type: "Full-Time",
       experience: postForm.experience || "Any",
-      skills: postForm.skills ? postForm.skills.split(',').map(s => s.trim()) : [],
+      skills: postForm.skills, // Will be split by comma in backend API helper
       description: postForm.description
     };
     
-    setJobs([newJob, ...jobs]);
-    setIsPostOpen(false);
-    setPostForm({ title: '', company: '', category: 'IT / Tech', location: '', salary: '', experience: '', skills: '', description: '' });
+    try {
+      await apiService.createJob(newJob);
+      setIsPostOpen(false);
+      setPostForm({ title: '', company: '', category: 'IT / Tech', location: '', salary: '', experience: '', skills: '', description: '' });
+      await fetchJobs();
+    } catch (err) {
+      alert("Failed to submit job posting: " + err.message);
+    }
   };
+
 
   const categories = ['All', 'IT / Tech', 'Accounts / Finance', 'Management', 'Office Admin'];
 
@@ -190,7 +147,17 @@ const JobsPage = () => {
       </div>
 
       {/* Jobs list */}
-      {filteredJobs.length === 0 ? (
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
+          <div className="spinner" style={{ border: '3px solid var(--border)', borderTop: '3px solid var(--accent)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4)' }}></div>
+          Loading jobs...
+        </div>
+      ) : error ? (
+        <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+          <AlertTriangle size={36} style={{ color: '#ef4444', marginBottom: '12px' }} />
+          <p>{error}</p>
+        </div>
+      ) : filteredJobs.length === 0 ? (
         <div className="glass-panel" style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
           <Info size={40} style={{ color: 'var(--text-muted)', marginBottom: '12px' }} />
           <h3>No active job openings match your query.</h3>

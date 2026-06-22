@@ -8,7 +8,7 @@ import { apiService } from '../services/api';
 
 const AdminPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('matrimony'); // 'matrimony' | 'news'
+  const [activeTab, setActiveTab] = useState('matrimony'); // 'matrimony' | 'news' | 'events' | 'jobs' | 'directory'
   const [currentUser, setCurrentUser] = useState(null);
   
   // Loading & Error states
@@ -19,15 +19,24 @@ const AdminPage = () => {
   // Data lists
   const [profiles, setProfiles] = useState([]);
   const [news, setNews] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [directory, setDirectory] = useState([]);
   
   // Search states
   const [profileSearch, setProfileSearch] = useState('');
   const [newsSearch, setNewsSearch] = useState('');
+  const [eventsSearch, setEventsSearch] = useState('');
+  const [jobsSearch, setJobsSearch] = useState('');
+  const [directorySearch, setDirectorySearch] = useState('');
   
   // Editor/Modal states
-  const [activeProfileEditor, setActiveProfileEditor] = useState(null); // null | 'add' | profile_object
-  const [activeNewsEditor, setActiveNewsEditor] = useState(null); // null | 'add' | news_object
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null); // null | { type: 'profile'|'news', id: number, name: string }
+  const [activeProfileEditor, setActiveProfileEditor] = useState(null);
+  const [activeNewsEditor, setActiveNewsEditor] = useState(null);
+  const [activeEventEditor, setActiveEventEditor] = useState(null);
+  const [activeJobEditor, setActiveJobEditor] = useState(null);
+  const [activeDirectoryEditor, setActiveDirectoryEditor] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null); // null | { type: 'profile'|'news'|'event'|'job'|'member', id: number, name: string }
 
   // Form states - Matrimony Profile
   const [profileForm, setProfileForm] = useState({
@@ -56,6 +65,43 @@ const AdminPage = () => {
     thumbnail_url: ''
   });
 
+  // Form states - Event
+  const [eventForm, setEventForm] = useState({
+    title: '',
+    date: '',
+    time: '',
+    location: '',
+    organizer: '',
+    description: '',
+    registrations: 0,
+    status: 'Open'
+  });
+
+  // Form states - Job Posting
+  const [jobForm, setJobForm] = useState({
+    title: '',
+    company: '',
+    category: 'IT / Tech',
+    location: '',
+    salary: '',
+    posted: 'Just now',
+    type: 'Full-Time',
+    experience: '',
+    skills: '',
+    description: ''
+  });
+
+  // Form states - Directory Member
+  const [directoryForm, setDirectoryForm] = useState({
+    name: '',
+    gotram: '',
+    profession: '',
+    location: '',
+    specialization: '',
+    contact: '',
+    phone: ''
+  });
+
   // Check authentication & load initial data
   useEffect(() => {
     const user = apiService.getCurrentUser();
@@ -74,8 +120,15 @@ const AdminPage = () => {
     try {
       const profileData = await apiService.getMatrimonyProfiles();
       const newsData = await apiService.getNewsArticles();
+      const eventData = await apiService.getEvents();
+      const jobData = await apiService.getJobs();
+      const directoryData = await apiService.getDirectory();
+      
       setProfiles(profileData);
       setNews(newsData);
+      setEvents(eventData);
+      setJobs(jobData);
+      setDirectory(directoryData);
     } catch (err) {
       setErrorMsg('Failed to load database records. Please make sure the backend server is running.');
       console.error(err);
@@ -214,9 +267,158 @@ const AdminPage = () => {
     }
   };
 
+  // Events CRUD Handlers
+  const handleEventSubmit = async (e) => {
+    e.preventDefault();
+    setActionLoading(true);
+    setErrorMsg('');
+    try {
+      if (activeEventEditor === 'add') {
+        await apiService.createEvent(eventForm);
+      } else {
+        await apiService.updateEvent(activeEventEditor.id, eventForm);
+      }
+      setActiveEventEditor(null);
+      await fetchData();
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to save event.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const openEventEditor = (eventItem = null) => {
+    setErrorMsg('');
+    if (!eventItem) {
+      setEventForm({
+        title: '',
+        date: '',
+        time: '',
+        location: '',
+        organizer: '',
+        description: '',
+        registrations: 0,
+        status: 'Open'
+      });
+      setActiveEventEditor('add');
+    } else {
+      setEventForm({
+        title: eventItem.title || '',
+        date: eventItem.date || '',
+        time: eventItem.time || '',
+        location: eventItem.location || '',
+        organizer: eventItem.organizer || '',
+        description: eventItem.description || '',
+        registrations: eventItem.registrations || 0,
+        status: eventItem.status || 'Open'
+      });
+      setActiveEventEditor(eventItem);
+    }
+  };
+
+  // Jobs CRUD Handlers
+  const handleJobSubmit = async (e) => {
+    e.preventDefault();
+    setActionLoading(true);
+    setErrorMsg('');
+    try {
+      if (activeJobEditor === 'add') {
+        await apiService.createJob(jobForm);
+      } else {
+        await apiService.updateJob(activeJobEditor.id, jobForm);
+      }
+      setActiveJobEditor(null);
+      await fetchData();
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to save job posting.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const openJobEditor = (jobItem = null) => {
+    setErrorMsg('');
+    if (!jobItem) {
+      setJobForm({
+        title: '',
+        company: '',
+        category: 'IT / Tech',
+        location: '',
+        salary: '',
+        posted: 'Just now',
+        type: 'Full-Time',
+        experience: '',
+        skills: '',
+        description: ''
+      });
+      setActiveJobEditor('add');
+    } else {
+      setJobForm({
+        title: jobItem.title || '',
+        company: jobItem.company || '',
+        category: jobItem.category || 'IT / Tech',
+        location: jobItem.location || '',
+        salary: jobItem.salary || '',
+        posted: jobItem.posted || 'Just now',
+        type: jobItem.type || 'Full-Time',
+        experience: jobItem.experience || '',
+        skills: Array.isArray(jobItem.skills) ? jobItem.skills.join(', ') : (jobItem.skills || ''),
+        description: jobItem.description || ''
+      });
+      setActiveJobEditor(jobItem);
+    }
+  };
+
+  // Directory CRUD Handlers
+  const handleDirectorySubmit = async (e) => {
+    e.preventDefault();
+    setActionLoading(true);
+    setErrorMsg('');
+    try {
+      if (activeDirectoryEditor === 'add') {
+        await apiService.createDirectoryMember(directoryForm);
+      } else {
+        await apiService.updateDirectoryMember(activeDirectoryEditor.id, directoryForm);
+      }
+      setActiveDirectoryEditor(null);
+      await fetchData();
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to save directory member.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const openDirectoryEditor = (memberItem = null) => {
+    setErrorMsg('');
+    if (!memberItem) {
+      setDirectoryForm({
+        name: '',
+        gotram: '',
+        profession: '',
+        location: '',
+        specialization: '',
+        contact: '',
+        phone: ''
+      });
+      setActiveDirectoryEditor('add');
+    } else {
+      setDirectoryForm({
+        name: memberItem.name || '',
+        gotram: memberItem.gotram || '',
+        profession: memberItem.profession || '',
+        location: memberItem.location || '',
+        specialization: memberItem.specialization || '',
+        contact: memberItem.contact || '',
+        phone: memberItem.phone || ''
+      });
+      setActiveDirectoryEditor(memberItem);
+    }
+  };
+
   // Delete Confirmation Handlers
   const triggerDeleteCheck = (type, item) => {
-    const name = type === 'profile' ? item.name : item.title;
+    const name = (type === 'profile' || type === 'member') ? item.name : item.title;
     setDeleteConfirmation({ type, id: item.id, name });
   };
 
@@ -229,8 +431,14 @@ const AdminPage = () => {
     try {
       if (type === 'profile') {
         await apiService.deleteProfile(id);
-      } else {
+      } else if (type === 'news') {
         await apiService.deleteNewsArticle(id);
+      } else if (type === 'event') {
+        await apiService.deleteEvent(id);
+      } else if (type === 'job') {
+        await apiService.deleteJob(id);
+      } else if (type === 'member') {
+        await apiService.deleteDirectoryMember(id);
       }
       setDeleteConfirmation(null);
       await fetchData();
@@ -271,6 +479,25 @@ const AdminPage = () => {
     n.content.toLowerCase().includes(newsSearch.toLowerCase())
   );
 
+  const filteredEvents = events.filter(e => 
+    e.title.toLowerCase().includes(eventsSearch.toLowerCase()) ||
+    e.location.toLowerCase().includes(eventsSearch.toLowerCase()) ||
+    (e.organizer && e.organizer.toLowerCase().includes(eventsSearch.toLowerCase()))
+  );
+
+  const filteredJobs = jobs.filter(j => 
+    j.title.toLowerCase().includes(jobsSearch.toLowerCase()) ||
+    j.company.toLowerCase().includes(jobsSearch.toLowerCase()) ||
+    j.location.toLowerCase().includes(jobsSearch.toLowerCase())
+  );
+
+  const filteredDirectory = directory.filter(m => 
+    m.name.toLowerCase().includes(directorySearch.toLowerCase()) ||
+    (m.gotram && m.gotram.toLowerCase().includes(directorySearch.toLowerCase())) ||
+    m.profession.toLowerCase().includes(directorySearch.toLowerCase()) ||
+    m.location.toLowerCase().includes(directorySearch.toLowerCase())
+  );
+
   return (
     <div className="admin-page page-container" style={{ maxWidth: 'var(--content-max-width)', margin: '0 auto', padding: 'var(--space-6)' }}>
       
@@ -304,15 +531,15 @@ const AdminPage = () => {
       )}
 
       {/* Primary Navigation Tabs */}
-      <div className="admin-tabs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)', marginBottom: 'var(--space-6)' }}>
+      <div className="admin-tabs" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 'var(--space-3)', marginBottom: 'var(--space-6)' }}>
         <button 
           onClick={() => { setActiveTab('matrimony'); setActiveProfileEditor(null); }}
           className={`tab-btn ${activeTab === 'matrimony' ? 'active' : ''}`}
           style={{
-            padding: '20px 24px',
-            fontSize: '1.2rem',
+            padding: '16px',
+            fontSize: '1.05rem',
             fontWeight: 800,
-            borderRadius: 'var(--radius-lg)',
+            borderRadius: 'var(--radius-md)',
             border: activeTab === 'matrimony' ? '2px solid var(--accent)' : '1px solid var(--border)',
             background: activeTab === 'matrimony' ? 'var(--accent-glow)' : 'transparent',
             color: activeTab === 'matrimony' ? 'var(--accent)' : 'var(--text-secondary)',
@@ -320,22 +547,22 @@ const AdminPage = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '12px',
-            boxShadow: activeTab === 'matrimony' ? '0 0 15px var(--accent-glow)' : 'none',
+            gap: '8px',
+            boxShadow: activeTab === 'matrimony' ? '0 0 10px var(--accent-glow)' : 'none',
             transition: 'all 0.2s'
           }}
         >
-          <UserCheck size={24} />
-          Matrimony Profiles ({profiles.length})
+          <UserCheck size={20} />
+          Matrimony ({profiles.length})
         </button>
         <button 
           onClick={() => { setActiveTab('news'); setActiveNewsEditor(null); }}
           className={`tab-btn ${activeTab === 'news' ? 'active' : ''}`}
           style={{
-            padding: '20px 24px',
-            fontSize: '1.2rem',
+            padding: '16px',
+            fontSize: '1.05rem',
             fontWeight: 800,
-            borderRadius: 'var(--radius-lg)',
+            borderRadius: 'var(--radius-md)',
             border: activeTab === 'news' ? '2px solid var(--accent)' : '1px solid var(--border)',
             background: activeTab === 'news' ? 'var(--accent-glow)' : 'transparent',
             color: activeTab === 'news' ? 'var(--accent)' : 'var(--text-secondary)',
@@ -343,13 +570,82 @@ const AdminPage = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '12px',
-            boxShadow: activeTab === 'news' ? '0 0 15px var(--accent-glow)' : 'none',
+            gap: '8px',
+            boxShadow: activeTab === 'news' ? '0 0 10px var(--accent-glow)' : 'none',
             transition: 'all 0.2s'
           }}
         >
-          <FileText size={24} />
-          Community News Feed ({news.length})
+          <FileText size={20} />
+          News ({news.length})
+        </button>
+        <button 
+          onClick={() => { setActiveTab('events'); setActiveEventEditor(null); }}
+          className={`tab-btn ${activeTab === 'events' ? 'active' : ''}`}
+          style={{
+            padding: '16px',
+            fontSize: '1.05rem',
+            fontWeight: 800,
+            borderRadius: 'var(--radius-md)',
+            border: activeTab === 'events' ? '2px solid var(--accent)' : '1px solid var(--border)',
+            background: activeTab === 'events' ? 'var(--accent-glow)' : 'transparent',
+            color: activeTab === 'events' ? 'var(--accent)' : 'var(--text-secondary)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            boxShadow: activeTab === 'events' ? '0 0 10px var(--accent-glow)' : 'none',
+            transition: 'all 0.2s'
+          }}
+        >
+          <Calendar size={20} />
+          Events ({events.length})
+        </button>
+        <button 
+          onClick={() => { setActiveTab('jobs'); setActiveJobEditor(null); }}
+          className={`tab-btn ${activeTab === 'jobs' ? 'active' : ''}`}
+          style={{
+            padding: '16px',
+            fontSize: '1.05rem',
+            fontWeight: 800,
+            borderRadius: 'var(--radius-md)',
+            border: activeTab === 'jobs' ? '2px solid var(--accent)' : '1px solid var(--border)',
+            background: activeTab === 'jobs' ? 'var(--accent-glow)' : 'transparent',
+            color: activeTab === 'jobs' ? 'var(--accent)' : 'var(--text-secondary)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            boxShadow: activeTab === 'jobs' ? '0 0 10px var(--accent-glow)' : 'none',
+            transition: 'all 0.2s'
+          }}
+        >
+          <Briefcase size={20} />
+          Jobs ({jobs.length})
+        </button>
+        <button 
+          onClick={() => { setActiveTab('directory'); setActiveDirectoryEditor(null); }}
+          className={`tab-btn ${activeTab === 'directory' ? 'active' : ''}`}
+          style={{
+            padding: '16px',
+            fontSize: '1.05rem',
+            fontWeight: 800,
+            borderRadius: 'var(--radius-md)',
+            border: activeTab === 'directory' ? '2px solid var(--accent)' : '1px solid var(--border)',
+            background: activeTab === 'directory' ? 'var(--accent-glow)' : 'transparent',
+            color: activeTab === 'directory' ? 'var(--accent)' : 'var(--text-secondary)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            boxShadow: activeTab === 'directory' ? '0 0 10px var(--accent-glow)' : 'none',
+            transition: 'all 0.2s'
+          }}
+        >
+          <Users size={20} />
+          Directory ({directory.length})
         </button>
       </div>
 
@@ -903,6 +1199,674 @@ const AdminPage = () => {
       )}
 
       {/* ============================================================
+          TAB: EVENTS
+         ============================================================ */}
+      {activeTab === 'events' && (
+        <div className="tab-pane">
+          {!activeEventEditor && (
+            <div className="glass-panel" style={{ padding: 'var(--space-6)', border: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-6)' }}>
+                <div style={{ position: 'relative', flex: 1, minWidth: '280px' }}>
+                  <Search size={20} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Search events by title, organizer, location..." 
+                    className="form-input" 
+                    value={eventsSearch}
+                    onChange={(e) => setEventsSearch(e.target.value)}
+                    style={{ paddingLeft: '48px', height: '48px', fontSize: '1.05rem', borderRadius: 'var(--radius-md)' }}
+                  />
+                </div>
+                
+                <button 
+                  onClick={() => openEventEditor()}
+                  className="btn btn-primary"
+                  style={{ background: '#22c55e', borderColor: '#22c55e', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px', fontSize: '1.1rem', fontWeight: 700 }}
+                >
+                  <Plus size={20} />
+                  Add New Event
+                </button>
+              </div>
+
+              {loading ? (
+                <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-secondary)' }}>
+                  <div className="spinner" style={{ border: '3px solid var(--border)', borderTop: '3px solid var(--accent)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4)' }}></div>
+                  Loading events...
+                </div>
+              ) : filteredEvents.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
+                  <AlertCircle size={40} style={{ color: 'var(--text-muted)', marginBottom: '10px' }} />
+                  <h3>No events found.</h3>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                  {filteredEvents.map(ev => (
+                    <div 
+                      key={ev.id} 
+                      style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: '1fr auto', 
+                        alignItems: 'center', 
+                        gap: '20px', 
+                        padding: '16px 20px', 
+                        background: 'rgba(255, 255, 255, 0.02)', 
+                        border: '1px solid var(--border)', 
+                        borderRadius: 'var(--radius-md)'
+                      }}
+                    >
+                      <div>
+                        <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)' }}>{ev.title}</h3>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                          Date: <strong>{ev.date}</strong> • Location: <strong>{ev.location}</strong> • Registrations: <strong>{ev.registrations}</strong>
+                        </p>
+                      </div>
+                      
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button 
+                          onClick={() => openEventEditor(ev)}
+                          className="btn btn-secondary btn-sm"
+                          style={{ borderColor: '#3b82f6', color: '#60a5fa', padding: '10px 18px', fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
+                        >
+                          <Edit2 size={16} />
+                          Edit
+                        </button>
+                        <button 
+                          onClick={() => triggerDeleteCheck('event', ev)}
+                          className="btn btn-outline btn-sm"
+                          style={{ borderColor: '#ef4444', color: '#f87171', padding: '10px 18px', fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
+                        >
+                          <Trash2 size={16} />
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeEventEditor && (
+            <div className="glass-panel" style={{ padding: 'var(--space-6)', border: '1px solid var(--border)' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 'var(--space-5)', color: 'var(--text-primary)' }}>
+                {activeEventEditor === 'add' ? 'Create Event' : `Edit Event: ${activeEventEditor.title}`}
+              </h2>
+              
+              <form onSubmit={handleEventSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
+                <div className="form-group">
+                  <label style={{ fontSize: '1rem', fontWeight: 700 }}>Event Title *</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={eventForm.title} 
+                    onChange={(e) => setEventForm({...eventForm, title: e.target.value})}
+                    style={{ height: '48px', fontSize: '1.05rem' }} 
+                    required 
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Date (e.g. July 12, 2026) *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      value={eventForm.date} 
+                      onChange={(e) => setEventForm({...eventForm, date: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Time (e.g. 10:00 AM - 5:00 PM)</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      value={eventForm.time} 
+                      onChange={(e) => setEventForm({...eventForm, time: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Location *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      value={eventForm.location} 
+                      onChange={(e) => setEventForm({...eventForm, location: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Organizer</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      value={eventForm.organizer} 
+                      onChange={(e) => setEventForm({...eventForm, organizer: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Registration RSVP Count</label>
+                    <input 
+                      type="number" 
+                      className="form-input" 
+                      value={eventForm.registrations} 
+                      onChange={(e) => setEventForm({...eventForm, registrations: parseInt(e.target.value) || 0})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Status</label>
+                    <select 
+                      className="form-input" 
+                      value={eventForm.status} 
+                      onChange={(e) => setEventForm({...eventForm, status: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem', background: 'var(--bg-input)' }}
+                    >
+                      <option value="Open">Open</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label style={{ fontSize: '1rem', fontWeight: 700 }}>Event Description</label>
+                  <textarea 
+                    className="form-input" 
+                    rows={6}
+                    value={eventForm.description} 
+                    onChange={(e) => setEventForm({...eventForm, description: e.target.value})}
+                    style={{ fontSize: '1.05rem', padding: '16px', lineHeight: '1.6' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '15px', marginTop: '10px', flexWrap: 'wrap' }}>
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary"
+                    disabled={actionLoading}
+                    style={{ background: '#22c55e', borderColor: '#22c55e', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 32px', fontSize: '1.1rem', fontWeight: 800 }}
+                  >
+                    <Check size={20} />
+                    {activeEventEditor === 'add' ? 'Create Event' : 'Save Changes'}
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => setActiveEventEditor(null)}
+                    className="btn btn-outline"
+                    style={{ borderColor: 'var(--border-strong)', color: 'var(--text-secondary)', padding: '16px 32px', fontSize: '1.1rem', fontWeight: 700 }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ============================================================
+          TAB: JOBS
+         ============================================================ */}
+      {activeTab === 'jobs' && (
+        <div className="tab-pane">
+          {!activeJobEditor && (
+            <div className="glass-panel" style={{ padding: 'var(--space-6)', border: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-6)' }}>
+                <div style={{ position: 'relative', flex: 1, minWidth: '280px' }}>
+                  <Search size={20} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Search job postings by title, company, location..." 
+                    className="form-input" 
+                    value={jobsSearch}
+                    onChange={(e) => setJobsSearch(e.target.value)}
+                    style={{ paddingLeft: '48px', height: '48px', fontSize: '1.05rem', borderRadius: 'var(--radius-md)' }}
+                  />
+                </div>
+                
+                <button 
+                  onClick={() => openJobEditor()}
+                  className="btn btn-primary"
+                  style={{ background: '#22c55e', borderColor: '#22c55e', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px', fontSize: '1.1rem', fontWeight: 700 }}
+                >
+                  <Plus size={20} />
+                  Add New Job Vacancy
+                </button>
+              </div>
+
+              {loading ? (
+                <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-secondary)' }}>
+                  <div className="spinner" style={{ border: '3px solid var(--border)', borderTop: '3px solid var(--accent)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4)' }}></div>
+                  Loading jobs...
+                </div>
+              ) : filteredJobs.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
+                  <AlertCircle size={40} style={{ color: 'var(--text-muted)', marginBottom: '10px' }} />
+                  <h3>No jobs found.</h3>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                  {filteredJobs.map(job => (
+                    <div 
+                      key={job.id} 
+                      style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: '1fr auto', 
+                        alignItems: 'center', 
+                        gap: '20px', 
+                        padding: '16px 20px', 
+                        background: 'rgba(255, 255, 255, 0.02)', 
+                        border: '1px solid var(--border)', 
+                        borderRadius: 'var(--radius-md)'
+                      }}
+                    >
+                      <div>
+                        <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)' }}>{job.title}</h3>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                          Company: <strong>{job.company}</strong> • Category: <strong>{job.category}</strong> • Location: <strong>{job.location}</strong>
+                        </p>
+                      </div>
+                      
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button 
+                          onClick={() => openJobEditor(job)}
+                          className="btn btn-secondary btn-sm"
+                          style={{ borderColor: '#3b82f6', color: '#60a5fa', padding: '10px 18px', fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
+                        >
+                          <Edit2 size={16} />
+                          Edit
+                        </button>
+                        <button 
+                          onClick={() => triggerDeleteCheck('job', job)}
+                          className="btn btn-outline btn-sm"
+                          style={{ borderColor: '#ef4444', color: '#f87171', padding: '10px 18px', fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
+                        >
+                          <Trash2 size={16} />
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeJobEditor && (
+            <div className="glass-panel" style={{ padding: 'var(--space-6)', border: '1px solid var(--border)' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 'var(--space-5)', color: 'var(--text-primary)' }}>
+                {activeJobEditor === 'add' ? 'Create Job posting' : `Edit Job Posting: ${activeJobEditor.title}`}
+              </h2>
+              
+              <form onSubmit={handleJobSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Job Title *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      value={jobForm.title} 
+                      onChange={(e) => setJobForm({...jobForm, title: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Company / Organization *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      value={jobForm.company} 
+                      onChange={(e) => setJobForm({...jobForm, company: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Category</label>
+                    <select 
+                      className="form-input" 
+                      value={jobForm.category} 
+                      onChange={(e) => setJobForm({...jobForm, category: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem', background: 'var(--bg-input)' }}
+                    >
+                      <option value="IT / Tech">IT / Tech</option>
+                      <option value="Accounts / Finance">Accounts / Finance</option>
+                      <option value="Management">Management</option>
+                      <option value="Office Admin">Office Admin</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Job Type</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. Full-Time, Part-Time, Internship"
+                      value={jobForm.type} 
+                      onChange={(e) => setJobForm({...jobForm, type: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Location *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. Hyderabad, TS (Hybrid)"
+                      value={jobForm.location} 
+                      onChange={(e) => setJobForm({...jobForm, location: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Salary Range</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. ₹8,00,000 - ₹12,00,000 / year"
+                      value={jobForm.salary} 
+                      onChange={(e) => setJobForm({...jobForm, salary: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Required Experience</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. 3+ Years, Freshers Welcome"
+                      value={jobForm.experience} 
+                      onChange={(e) => setJobForm({...jobForm, experience: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Skills required (comma-separated)</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. React, Python, SQL"
+                      value={jobForm.skills} 
+                      onChange={(e) => setJobForm({...jobForm, skills: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label style={{ fontSize: '1rem', fontWeight: 700 }}>Job Description</label>
+                  <textarea 
+                    className="form-input" 
+                    rows={6}
+                    value={jobForm.description} 
+                    onChange={(e) => setJobForm({...jobForm, description: e.target.value})}
+                    style={{ fontSize: '1.05rem', padding: '16px', lineHeight: '1.6' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '15px', marginTop: '10px', flexWrap: 'wrap' }}>
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary"
+                    disabled={actionLoading}
+                    style={{ background: '#22c55e', borderColor: '#22c55e', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 32px', fontSize: '1.1rem', fontWeight: 800 }}
+                  >
+                    <Check size={20} />
+                    {activeJobEditor === 'add' ? 'Post Vacancy' : 'Save Changes'}
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => setActiveJobEditor(null)}
+                    className="btn btn-outline"
+                    style={{ borderColor: 'var(--border-strong)', color: 'var(--text-secondary)', padding: '16px 32px', fontSize: '1.1rem', fontWeight: 700 }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ============================================================
+          TAB: DIRECTORY MEMBERS
+         ============================================================ */}
+      {activeTab === 'directory' && (
+        <div className="tab-pane">
+          {!activeDirectoryEditor && (
+            <div className="glass-panel" style={{ padding: 'var(--space-6)', border: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-6)' }}>
+                <div style={{ position: 'relative', flex: 1, minWidth: '280px' }}>
+                  <Search size={20} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Search directory by name, Gotram, profession..." 
+                    className="form-input" 
+                    value={directorySearch}
+                    onChange={(e) => setDirectorySearch(e.target.value)}
+                    style={{ paddingLeft: '48px', height: '48px', fontSize: '1.05rem', borderRadius: 'var(--radius-md)' }}
+                  />
+                </div>
+                
+                <button 
+                  onClick={() => openDirectoryEditor()}
+                  className="btn btn-primary"
+                  style={{ background: '#22c55e', borderColor: '#22c55e', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px', fontSize: '1.1rem', fontWeight: 700 }}
+                >
+                  <Plus size={20} />
+                  Add Directory Member
+                </button>
+              </div>
+
+              {loading ? (
+                <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-secondary)' }}>
+                  <div className="spinner" style={{ border: '3px solid var(--border)', borderTop: '3px solid var(--accent)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4)' }}></div>
+                  Loading directory...
+                </div>
+              ) : filteredDirectory.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
+                  <AlertCircle size={40} style={{ color: 'var(--text-muted)', marginBottom: '10px' }} />
+                  <h3>No members found.</h3>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                  {filteredDirectory.map(m => (
+                    <div 
+                      key={m.id} 
+                      style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: '1fr auto', 
+                        alignItems: 'center', 
+                        gap: '20px', 
+                        padding: '16px 20px', 
+                        background: 'rgba(255, 255, 255, 0.02)', 
+                        border: '1px solid var(--border)', 
+                        borderRadius: 'var(--radius-md)'
+                      }}
+                    >
+                      <div>
+                        <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)' }}>{m.name}</h3>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                          Gotram: <strong>{m.gotram || 'Unknown'}</strong> • Profession: <strong>{m.profession}</strong> • Location: <strong>{m.location}</strong>
+                        </p>
+                      </div>
+                      
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button 
+                          onClick={() => openDirectoryEditor(m)}
+                          className="btn btn-secondary btn-sm"
+                          style={{ borderColor: '#3b82f6', color: '#60a5fa', padding: '10px 18px', fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
+                        >
+                          <Edit2 size={16} />
+                          Edit
+                        </button>
+                        <button 
+                          onClick={() => triggerDeleteCheck('member', m)}
+                          className="btn btn-outline btn-sm"
+                          style={{ borderColor: '#ef4444', color: '#f87171', padding: '10px 18px', fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
+                        >
+                          <Trash2 size={16} />
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeDirectoryEditor && (
+            <div className="glass-panel" style={{ padding: 'var(--space-6)', border: '1px solid var(--border)' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 'var(--space-5)', color: 'var(--text-primary)' }}>
+                {activeDirectoryEditor === 'add' ? 'Add Member' : `Edit Member: ${activeDirectoryEditor.name}`}
+              </h2>
+              
+              <form onSubmit={handleDirectorySubmit} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Full Name *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      value={directoryForm.name} 
+                      onChange={(e) => setDirectoryForm({...directoryForm, name: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Gotram</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      value={directoryForm.gotram} 
+                      onChange={(e) => setDirectoryForm({...directoryForm, gotram: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Profession / Title *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. Retired Professor, Senior Accountant"
+                      value={directoryForm.profession} 
+                      onChange={(e) => setDirectoryForm({...directoryForm, profession: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Location *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. Visakhapatnam, AP"
+                      value={directoryForm.location} 
+                      onChange={(e) => setDirectoryForm({...directoryForm, location: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Contact Email</label>
+                    <input 
+                      type="email" 
+                      className="form-input" 
+                      value={directoryForm.contact} 
+                      onChange={(e) => setDirectoryForm({...directoryForm, contact: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Phone Number</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. +91 94401 XXXXX"
+                      value={directoryForm.phone} 
+                      onChange={(e) => setDirectoryForm({...directoryForm, phone: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label style={{ fontSize: '1rem', fontWeight: 700 }}>Specialization / Area of Focus</label>
+                  <textarea 
+                    className="form-input" 
+                    rows={4}
+                    placeholder="e.g. Educational Counselling, Small Scale Industries"
+                    value={directoryForm.specialization} 
+                    onChange={(e) => setDirectoryForm({...directoryForm, specialization: e.target.value})}
+                    style={{ fontSize: '1.05rem', padding: '16px', lineHeight: '1.6' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '15px', marginTop: '10px', flexWrap: 'wrap' }}>
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary"
+                    disabled={actionLoading}
+                    style={{ background: '#22c55e', borderColor: '#22c55e', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 32px', fontSize: '1.1rem', fontWeight: 800 }}
+                  >
+                    <Check size={20} />
+                    {activeDirectoryEditor === 'add' ? 'Add Member' : 'Save Changes'}
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => setActiveDirectoryEditor(null)}
+                    className="btn btn-outline"
+                    style={{ borderColor: 'var(--border-strong)', color: 'var(--text-secondary)', padding: '16px 32px', fontSize: '1.1rem', fontWeight: 700 }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ============================================================
           OVERLAY DIALOG: DOUBLE CHECK CONFIRM DELETE (Elderly-Friendly)
          ============================================================ */}
       {deleteConfirmation && (
@@ -915,7 +1879,7 @@ const AdminPage = () => {
             </h2>
             
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: 'var(--space-6)' }}>
-              You are about to permanently delete the {deleteConfirmation.type === 'profile' ? 'matrimony profile' : 'news article'} for:<br />
+              You are about to permanently delete the {deleteConfirmation.type === 'profile' ? 'matrimony profile' : deleteConfirmation.type === 'news' ? 'news article' : deleteConfirmation.type === 'event' ? 'event' : deleteConfirmation.type === 'job' ? 'job vacancy' : 'directory member'} for:<br />
               <strong style={{ color: '#ffffff', fontSize: '1.25rem', display: 'block', margin: '12px 0' }}>"{deleteConfirmation.name}"</strong>
               This action is permanent and cannot be undone.
             </p>

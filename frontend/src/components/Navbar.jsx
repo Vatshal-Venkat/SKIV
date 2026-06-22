@@ -44,7 +44,8 @@ const navLinks = [
     dropdown: [
       { label: 'Forum Lobby', href: '#' },
       { label: 'Discussions', href: '#' },
-      { label: 'Events Hub', href: '#' }
+      { label: 'Events Hub', href: '/events' },
+      { label: 'Jobs & Careers', href: '/jobs' }
     ]
   },
   {
@@ -71,8 +72,8 @@ const navLinks = [
     href: '#',
     dropdown: [
       { label: 'Matrimony Lobby', href: '/matrimony' },
-      { label: 'Formal Associations', href: '#' },
-      { label: 'Youth Portal', href: '#' }
+      { label: 'Community Directory', href: '/directory' },
+      { label: 'Formal Associations', href: '#' }
     ]
   }
 ];

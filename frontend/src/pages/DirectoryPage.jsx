@@ -1,84 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Users, MapPin, Tag, Phone, Globe, ShieldAlert } from 'lucide-react';
-
-const MOCK_MEMBERS = [
-  {
-    id: 1,
-    name: "Dr. Ramesh Patnaik",
-    gotram: "Gautama",
-    profession: "Retired Professor & Historian",
-    location: "Visakhapatnam, AP",
-    specialization: "Educational Counselling & Cultural History",
-    contact: "ramesh.patnaik@skiv.online",
-    phone: "+91 94401 XXXXX"
-  },
-  {
-    id: 2,
-    name: "Sri D.S. Bharat",
-    gotram: "Bharadwaja",
-    profession: "Senior IT Executive",
-    location: "Noida, Delhi-NCR",
-    specialization: "Software Architecture & Career Mentorship",
-    contact: "ds.bharat@gmail.com",
-    phone: "+91 98112 XXXXX"
-  },
-  {
-    id: 3,
-    name: "Smt. G. Varalakshmi",
-    gotram: "Srivatsa",
-    profession: "Social Worker & Cultural Advisor",
-    location: "Hyderabad, TS",
-    specialization: "Women Welfare & Community Organizing",
-    contact: "varalakshmi.g@skiv.online",
-    phone: "+91 98490 XXXXX"
-  },
-  {
-    id: 4,
-    name: "Sri Kuppili Bhimeshwara Rao",
-    gotram: "Kasyapa",
-    profession: "Business Owner & Industrialist",
-    location: "Kharagpur, WB",
-    specialization: "Small Scale Industries & Local Employment",
-    contact: "kuppili.brao@outlook.com",
-    phone: "+91 98322 XXXXX"
-  },
-  {
-    id: 5,
-    name: "Sri Sekharamantri Prabhakara Rao",
-    gotram: "Vasishta",
-    profession: "Chartered Accountant",
-    location: "Bhubaneswar, Odisha",
-    specialization: "Tax Compliance, Audits & NGO Accounting",
-    contact: "sp.rao.ca@gmail.com",
-    phone: "+91 99370 XXXXX"
-  },
-  {
-    id: 6,
-    name: "Neha Patnaik",
-    gotram: "Gautama",
-    profession: "Chartered Financial Analyst (CFA)",
-    location: "Raipur, Chhattisgarh",
-    specialization: "Investment Banking & Corporate Finance",
-    contact: "neha.patnaik@skiv.online",
-    phone: "+91 78822 XXXXX"
-  }
-];
+import { ArrowLeft, Search, Users, MapPin, Tag, Phone, Globe, ShieldAlert, AlertTriangle } from 'lucide-react';
+import { apiService } from '../services/api';
 
 const DirectoryPage = () => {
   const navigate = useNavigate();
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGotram, setSelectedGotram] = useState('All');
   const [selectedLocation, setSelectedLocation] = useState('All');
   const [activeContactMember, setActiveContactMember] = useState(null);
 
-  const locations = ['All', 'Visakhapatnam', 'Hyderabad', 'Delhi-NCR', 'Kharagpur', 'Bhubaneswar', 'Raipur'];
-  const gotrams = ['All', 'Gautama', 'Bharadwaja', 'Srivatsa', 'Kasyapa', 'Vasishta'];
+  useEffect(() => {
+    fetchDirectory();
+  }, []);
 
-  const filteredMembers = MOCK_MEMBERS.filter(m => {
+  const fetchDirectory = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await apiService.getDirectory();
+      setMembers(data);
+    } catch (err) {
+      setError("Failed to fetch community directory from database.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const locations = ['All', ...new Set(members.map(m => m.location.split(',')[0].trim()))];
+  const gotrams = ['All', ...new Set(members.map(m => m.gotram).filter(Boolean))];
+
+  const filteredMembers = members.filter(m => {
     const matchesSearch = m.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           m.profession.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          m.specialization.toLowerCase().includes(searchTerm.toLowerCase());
+                          (m.specialization && m.specialization.toLowerCase().includes(searchTerm.toLowerCase()));
                           
     const matchesGotram = selectedGotram === 'All' || m.gotram === selectedGotram;
     
@@ -86,6 +44,7 @@ const DirectoryPage = () => {
     
     return matchesSearch && matchesGotram && matchesLocation;
   });
+
 
   return (
     <div className="page-container directory-page" style={{ maxWidth: 'var(--content-max-width)', margin: '40px auto', padding: '0 var(--space-6) var(--space-10)' }}>
@@ -155,7 +114,17 @@ const DirectoryPage = () => {
       </div>
 
       {/* Directory Grid */}
-      {filteredMembers.length === 0 ? (
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
+          <div className="spinner" style={{ border: '3px solid var(--border)', borderTop: '3px solid var(--accent)', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4)' }}></div>
+          Loading directory...
+        </div>
+      ) : error ? (
+        <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+          <AlertTriangle size={36} style={{ color: '#ef4444', marginBottom: '12px' }} />
+          <p>{error}</p>
+        </div>
+      ) : filteredMembers.length === 0 ? (
         <div className="glass-panel" style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
           <ShieldAlert size={40} style={{ color: 'var(--text-muted)', marginBottom: '12px' }} />
           <h3>No directory matches found.</h3>
