@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import {
   Heart,
   Briefcase,
@@ -18,7 +19,7 @@ const LeftSidebar = () => {
             <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--fs-xs)', marginTop: 'var(--space-3)' }}>
               Find your perfect match within our community
             </p>
-            <button className="btn btn-secondary btn-block" style={{ marginTop: 'var(--space-3)' }}>Browse Profiles</button>
+            <Link to="/matrimony" className="btn btn-secondary btn-block" style={{ display: 'block', marginTop: 'var(--space-3)', textDecoration: 'none' }}>Browse Profiles</Link>
           </div>
         </div>
       </div>
@@ -32,7 +33,7 @@ const LeftSidebar = () => {
             <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--fs-xs)', marginTop: 'var(--space-3)' }}>
               Latest career opportunities shared by community members
             </p>
-            <button className="btn btn-secondary btn-block" style={{ marginTop: 'var(--space-3)' }}>View Jobs</button>
+            <Link to="/jobs" className="btn btn-secondary btn-block" style={{ display: 'block', marginTop: 'var(--space-3)', textDecoration: 'none' }}>View Jobs</Link>
           </div>
         </div>
       </div>
