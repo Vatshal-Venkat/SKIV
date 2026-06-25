@@ -427,7 +427,7 @@ const MatrimonyPage = () => {
                     <h3 style={{ fontSize: '0.85rem', color: '#d4af37', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}>
                       Education & Career
                     </h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       <div>
                         <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Education</strong>
                         <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.education}</span>
@@ -436,10 +436,10 @@ const MatrimonyPage = () => {
                         <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Occupation</strong>
                         <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.occupation}</span>
                       </div>
-                    </div>
-                    <div>
-                      <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Organization</strong>
-                      <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.company}</span>
+                      <div>
+                        <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Organization</strong>
+                        <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.company}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
