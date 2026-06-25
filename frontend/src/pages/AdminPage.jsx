@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Plus, Search, Edit2, Trash2, ShieldAlert, Check, X, 
-  Upload, UserCheck, FileText, ChevronRight, RefreshCw, AlertCircle
+  Upload, UserCheck, FileText, ChevronRight, RefreshCw, AlertCircle,
+  Briefcase, Calendar, Users
 } from 'lucide-react';
 import { apiService } from '../services/api';
 
