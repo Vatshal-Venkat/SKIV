@@ -15,6 +15,7 @@ import DemoLogin from './components/DemoLogin';
 import { apiService } from './services/api';
 import './App.css';
 
+
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(() => apiService.getCurrentUser());
@@ -23,7 +24,7 @@ function App() {
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
     setIsLoginOpen(false);
-    
+
     // Show a beautiful welcome toast for 2.5 seconds
     setWelcomeMessage(`Hello, ${user.display_name || user.username}`);
     setTimeout(() => {
@@ -40,8 +41,8 @@ function App() {
     <Router>
       <ScrollToTop />
       <div className="app-layout">
-        <Navbar 
-          onLoginClick={() => setIsLoginOpen(true)} 
+        <Navbar
+          onLoginClick={() => setIsLoginOpen(true)}
           currentUser={currentUser}
           onLogout={handleLogout}
         />
@@ -59,12 +60,12 @@ function App() {
 
         <Footer />
         {isLoginOpen && (
-          <DemoLogin 
-            onClose={() => setIsLoginOpen(false)} 
+          <DemoLogin
+            onClose={() => setIsLoginOpen(false)}
             onLoginSuccess={handleLoginSuccess}
           />
         )}
-        
+
         {/* Welcome Message Toast / Dialogue box */}
         {welcomeMessage && (
           <div className="welcome-dialogue-overlay">
