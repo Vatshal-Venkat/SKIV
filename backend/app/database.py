@@ -15,7 +15,10 @@ elif settings.DATABASE_URL.startswith("mysql"):
         pool_recycle=3600
     )
 else:
-    engine = create_engine(settings.DATABASE_URL)
+    engine = create_engine(
+        settings.DATABASE_URL,
+        pool_pre_ping=True
+    )
 
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
