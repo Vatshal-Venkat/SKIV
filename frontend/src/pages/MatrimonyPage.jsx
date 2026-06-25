@@ -9,6 +9,7 @@ const MatrimonyPage = () => {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [requestEmail, setRequestEmail] = useState('');
   const [requestStatus, setRequestStatus] = useState(null);
+  const [showMehndi, setShowMehndi] = useState(false);
   
   // Filters state
   const [genderFilter, setGenderFilter] = useState('');
@@ -23,6 +24,16 @@ const MatrimonyPage = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    if (selectedProfile) {
+      setShowMehndi(true);
+      const timer = setTimeout(() => {
+        setShowMehndi(false);
+      }, 1400);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedProfile]);
 
   // Fetch profiles based on filters
   useEffect(() => {
@@ -219,6 +230,42 @@ const MatrimonyPage = () => {
       {/* Profile Detail Modal */}
       {selectedProfile && (
         <div className="demo-login__overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          {/* Custom Animations Style Tag */}
+          <style>{`
+            @keyframes mehndiSplash {
+              0% {
+                transform: scale(0.2) rotate(0deg);
+                opacity: 0;
+              }
+              20% {
+                opacity: 1;
+              }
+              60% {
+                transform: scale(1) rotate(60deg);
+                opacity: 1;
+                filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.6));
+              }
+              100% {
+                transform: scale(1.5) rotate(120deg);
+                opacity: 0;
+                filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0));
+              }
+            }
+            @keyframes fadeOut {
+              0% { opacity: 1; }
+              100% { opacity: 0; visibility: hidden; }
+            }
+            @keyframes modalContentFadeIn {
+              0% {
+                opacity: 0;
+                transform: scale(0.96);
+              }
+              100% {
+                opacity: 1;
+                transform: scale(1);
+              }
+            }
+          `}</style>
           <div 
             className="wedding-card-container" 
             style={{ 
@@ -230,9 +277,89 @@ const MatrimonyPage = () => {
               padding: isMobile ? '24px' : '40px', 
               position: 'relative', 
               boxShadow: '0 24px 80px rgba(0,0,0,0.85), 0 0 50px rgba(197, 160, 89, 0.08)',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              animation: 'modalContentFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards'
             }}
           >
+            {/* Mehndi Animation Overlay */}
+            {showMehndi && (
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: '#0c0f1d',
+                zIndex: 100,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                pointerEvents: 'none',
+                borderRadius: '24px',
+                animation: 'fadeOut 0.3s ease-out 1.1s forwards'
+              }}>
+                <div style={{
+                  animation: 'mehndiSplash 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards'
+                }}>
+                  <svg width="240" height="240" viewBox="0 0 100 100" style={{ transformOrigin: 'center' }}>
+                    <circle cx="50" cy="50" r="46" stroke="#d4af37" strokeWidth="0.8" fill="none" strokeDasharray="2 2" />
+                    <circle cx="50" cy="50" r="42" stroke="#d4af37" strokeWidth="1.2" fill="none" />
+                    <circle cx="50" cy="50" r="35" stroke="#d4af37" strokeWidth="0.8" fill="none" />
+                    {/* Outer scalloped border */}
+                    {[...Array(24)].map((_, i) => {
+                      const angle = (i * 360) / 24;
+                      const rad = (angle * Math.PI) / 180;
+                      return (
+                        <circle
+                          key={`scallop-${i}`}
+                          cx={50 + 42 * Math.cos(rad)}
+                          cy={50 + 42 * Math.sin(rad)}
+                          r="2.5"
+                          stroke="#d4af37"
+                          strokeWidth="0.6"
+                          fill="none"
+                        />
+                      );
+                    })}
+                    {/* Outer petals */}
+                    {[...Array(12)].map((_, i) => {
+                      const angle = (i * 360) / 12;
+                      const angle1 = ((angle - 15) * Math.PI) / 180;
+                      const angle2 = ((angle + 15) * Math.PI) / 180;
+                      const angleTarget = (angle * Math.PI) / 180;
+                      return (
+                        <path
+                          key={`petal-${i}`}
+                          d={"M 50 50 Q " + (50 + 35 * Math.cos(angle1)) + " " + (50 + 35 * Math.sin(angle1)) + " " + (50 + 38 * Math.cos(angleTarget)) + " " + (50 + 38 * Math.sin(angleTarget)) + " Q " + (50 + 35 * Math.cos(angle2)) + " " + (50 + 35 * Math.sin(angle2)) + " 50 50"}
+                          stroke="#d4af37"
+                          strokeWidth="1"
+                          fill="rgba(197, 160, 89, 0.05)"
+                        />
+                      );
+                    })}
+                    {/* Inner petals */}
+                    {[...Array(8)].map((_, i) => {
+                      const angle = (i * 360) / 8 + 22.5;
+                      const angle1 = ((angle - 20) * Math.PI) / 180;
+                      const angle2 = ((angle + 20) * Math.PI) / 180;
+                      const angleTarget = (angle * Math.PI) / 180;
+                      return (
+                        <path
+                          key={`inner-petal-${i}`}
+                          d={"M 50 50 Q " + (50 + 22 * Math.cos(angle1)) + " " + (50 + 22 * Math.sin(angle1)) + " " + (50 + 25 * Math.cos(angleTarget)) + " " + (50 + 25 * Math.sin(angleTarget)) + " Q " + (50 + 22 * Math.cos(angle2)) + " " + (50 + 22 * Math.sin(angle2)) + " 50 50"}
+                          stroke="#d4af37"
+                          strokeWidth="0.8"
+                          fill="rgba(197, 160, 89, 0.1)"
+                        />
+                      );
+                    })}
+                    <circle cx="50" cy="50" r="15" stroke="#d4af37" strokeWidth="0.8" fill="none" strokeDasharray="1 1" />
+                    <circle cx="50" cy="50" r="8" stroke="#d4af37" strokeWidth="1.2" fill="#d4af37" />
+                    <circle cx="50" cy="50" r="3" fill="#0c0f1d" />
+                  </svg>
+                </div>
+              </div>
+            )}
             {/* Elegant Double Border / Frame Inset */}
             <div style={{
               position: 'absolute',
@@ -408,39 +535,67 @@ const MatrimonyPage = () => {
                   margin: '20px 0' 
                 }} />
 
-                {/* Information Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
-                  
-                  {/* Personal Block */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <h3 style={{ fontSize: '0.85rem', color: '#d4af37', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}>
-                      Kundali & Family
-                    </h3>
-                    <div>
-                      <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Gotram</strong>
-                      <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.gotram}</span>
-                    </div>
+                {/* Unified Information Grid */}
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
+                  gap: '16px', 
+                  marginBottom: '24px' 
+                }}>
+                  {/* Gotram Card */}
+                  <div style={{ 
+                    background: 'rgba(197, 160, 89, 0.02)', 
+                    border: '1px solid rgba(197, 160, 89, 0.12)', 
+                    borderRadius: '12px', 
+                    padding: '12px 16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}>
+                    <strong style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#d4af37', letterSpacing: '0.08em' }}>Gotram</strong>
+                    <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.gotram}</span>
                   </div>
 
-                  {/* Professional Block */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <h3 style={{ fontSize: '0.85rem', color: '#d4af37', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}>
-                      Education & Career
-                    </h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      <div>
-                        <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Education</strong>
-                        <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.education}</span>
-                      </div>
-                      <div>
-                        <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Occupation</strong>
-                        <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.occupation}</span>
-                      </div>
-                      <div>
-                        <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Organization</strong>
-                        <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.company}</span>
-                      </div>
-                    </div>
+                  {/* Education Card */}
+                  <div style={{ 
+                    background: 'rgba(197, 160, 89, 0.02)', 
+                    border: '1px solid rgba(197, 160, 89, 0.12)', 
+                    borderRadius: '12px', 
+                    padding: '12px 16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}>
+                    <strong style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#d4af37', letterSpacing: '0.08em' }}>Education</strong>
+                    <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.education}</span>
+                  </div>
+
+                  {/* Occupation Card */}
+                  <div style={{ 
+                    background: 'rgba(197, 160, 89, 0.02)', 
+                    border: '1px solid rgba(197, 160, 89, 0.12)', 
+                    borderRadius: '12px', 
+                    padding: '12px 16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}>
+                    <strong style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#d4af37', letterSpacing: '0.08em' }}>Occupation</strong>
+                    <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.occupation}</span>
+                  </div>
+
+                  {/* Organization Card */}
+                  <div style={{ 
+                    background: 'rgba(197, 160, 89, 0.02)', 
+                    border: '1px solid rgba(197, 160, 89, 0.12)', 
+                    borderRadius: '12px', 
+                    padding: '12px 16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}>
+                    <strong style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#d4af37', letterSpacing: '0.08em' }}>Organization</strong>
+                    <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.company}</span>
                   </div>
                 </div>
 
