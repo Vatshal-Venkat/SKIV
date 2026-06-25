@@ -16,6 +16,14 @@ const MatrimonyPage = () => {
   const [locationFilter, setLocationFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Fetch profiles based on filters
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -210,123 +218,299 @@ const MatrimonyPage = () => {
 
       {/* Profile Detail Modal */}
       {selectedProfile && (
-        <div className="demo-login__overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div className="demo-login__card" style={{ maxWidth: '520px', width: '90%', position: 'relative' }}>
+        <div className="demo-login__overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div 
+            className="wedding-card-container" 
+            style={{ 
+              maxWidth: '860px', 
+              width: '100%', 
+              background: '#0c0f1d', 
+              border: '1px solid rgba(197, 160, 89, 0.45)', 
+              borderRadius: '24px', 
+              padding: isMobile ? '24px' : '40px', 
+              position: 'relative', 
+              boxShadow: '0 24px 80px rgba(0,0,0,0.85), 0 0 50px rgba(197, 160, 89, 0.08)',
+              overflow: 'hidden'
+            }}
+          >
+            {/* Elegant Double Border / Frame Inset */}
+            <div style={{
+              position: 'absolute',
+              top: '12px',
+              left: '12px',
+              right: '12px',
+              bottom: '12px',
+              border: '1px solid rgba(197, 160, 89, 0.15)',
+              borderRadius: '16px',
+              pointerEvents: 'none'
+            }} />
+
+            {/* Close Button */}
             <button 
               className="demo-login__close"
               onClick={() => { setSelectedProfile(null); setRequestStatus(null); }}
-              style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+              style={{ 
+                border: 'none', 
+                background: 'rgba(197, 160, 89, 0.08)', 
+                cursor: 'pointer',
+                position: 'absolute',
+                top: '24px',
+                right: '24px',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'rgba(197, 160, 89, 0.8)',
+                border: '1px solid rgba(197, 160, 89, 0.25)',
+                transition: 'all 0.2s',
+                zIndex: 10
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(197, 160, 89, 0.2)';
+                e.currentTarget.style.color = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(197, 160, 89, 0.08)';
+                e.currentTarget.style.color = 'rgba(197, 160, 89, 0.8)';
+              }}
             >
-              <X size={20} />
+              <X size={18} />
             </button>
 
-            {/* Photo Gallery (JeevanSaathi / Hinge style) */}
-            {selectedProfile.photo_urls && selectedProfile.photo_urls.length > 0 && (
-              <div style={{ marginBottom: 'var(--space-4)' }}>
-                <div style={{ width: '100%', height: '280px', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border)', position: 'relative' }}>
-                  <img 
-                    src={selectedProfile.photo_urls[activePhotoIndex]} 
-                    alt={selectedProfile.name} 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                  />
-                  {selectedProfile.photo_urls.length > 1 && (
-                    <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '10px', color: '#fff', fontSize: '0.68rem', fontWeight: 600 }}>
-                      {activePhotoIndex + 1} / {selectedProfile.photo_urls.length}
-                    </div>
-                  )}
-                </div>
-                {/* Thumbnails */}
-                {selectedProfile.photo_urls.length > 1 && (
-                  <div style={{ display: 'flex', gap: '8px', marginTop: '8px', overflowX: 'auto', paddingBottom: '6px' }}>
-                    {selectedProfile.photo_urls.map((url, idx) => (
-                      <img
-                        key={idx}
-                        src={url}
-                        alt={`Thumbnail ${idx + 1}`}
-                        onClick={() => setActivePhotoIndex(idx)}
-                        style={{
-                          width: '50px',
-                          height: '50px',
-                          borderRadius: 'var(--radius-sm)',
-                          objectFit: 'cover',
-                          cursor: 'pointer',
-                          border: activePhotoIndex === idx ? '2px solid var(--accent)' : '2px solid transparent',
-                          opacity: activePhotoIndex === idx ? 1 : 0.6,
-                          transition: 'all 0.2s'
-                        }}
+            {/* Main Content Grid */}
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', 
+              gap: '32px',
+              position: 'relative',
+              zIndex: 2
+            }}>
+              
+              {/* Left Column: Elegant Arch Photo Frame & Gallery */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+                {selectedProfile.photo_urls && selectedProfile.photo_urls.length > 0 && (
+                  <div style={{ width: '100%' }}>
+                    {/* Royal Arch Frame */}
+                    <div style={{ 
+                      width: '100%', 
+                      height: isMobile ? '300px' : '390px', 
+                      borderTopLeftRadius: '160px', 
+                      borderTopRightRadius: '160px', 
+                      borderBottomLeftRadius: '16px',
+                      borderBottomRightRadius: '16px',
+                      overflow: 'hidden', 
+                      border: '2px solid rgba(197, 160, 89, 0.65)', 
+                      position: 'relative',
+                      boxShadow: '0 15px 35px rgba(0,0,0,0.6)'
+                    }}>
+                      <img 
+                        src={selectedProfile.photo_urls[activePhotoIndex]} 
+                        alt={selectedProfile.name} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                       />
-                    ))}
+                      {selectedProfile.photo_urls.length > 1 && (
+                        <div style={{ 
+                          position: 'absolute', 
+                          bottom: '12px', 
+                          left: '50%', 
+                          transform: 'translateX(-50%)', 
+                          background: 'rgba(12, 15, 29, 0.85)', 
+                          padding: '3px 10px', 
+                          borderRadius: '20px', 
+                          color: '#d4af37', 
+                          fontSize: '0.7rem', 
+                          fontWeight: 700,
+                          border: '1px solid rgba(197, 160, 89, 0.3)',
+                          letterSpacing: '0.05em'
+                        }}>
+                          {activePhotoIndex + 1} / {selectedProfile.photo_urls.length}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Gallery Thumbnails */}
+                    {selectedProfile.photo_urls.length > 1 && (
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '12px', justifyContent: 'center', overflowX: 'auto', paddingBottom: '4px' }}>
+                        {selectedProfile.photo_urls.map((url, idx) => (
+                          <img
+                            key={idx}
+                            src={url}
+                            alt={`Thumbnail ${idx + 1}`}
+                            onClick={() => setActivePhotoIndex(idx)}
+                            style={{
+                              width: '46px',
+                              height: '46px',
+                              borderRadius: '8px',
+                              objectFit: 'cover',
+                              cursor: 'pointer',
+                              border: activePhotoIndex === idx ? '2px solid #d4af37' : '2px solid transparent',
+                              boxShadow: activePhotoIndex === idx ? '0 0 8px rgba(197,160,89,0.5)' : 'none',
+                              opacity: activePhotoIndex === idx ? 1 : 0.5,
+                              transition: 'all 0.2s'
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
 
-            {/* Header info */}
-            <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'center', marginBottom: 'var(--space-4)' }}>
-              <div>
-                <h2 style={{ fontSize: '1.35rem', fontWeight: 700 }}>{selectedProfile.name}</h2>
-                <p style={{ color: 'var(--accent-hover)', fontSize: '0.85rem', fontWeight: 600 }}>
-                  {selectedProfile.gender} • {selectedProfile.age} Years • {selectedProfile.height}
-                </p>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                  <MapPin size={12} /> {selectedProfile.location}
-                </p>
+              {/* Right Column: Invitation details */}
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                
+                {/* Header Section */}
+                <div>
+                  <h2 style={{ 
+                    fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", 
+                    fontSize: isMobile ? '2.1rem' : '2.6rem', 
+                    fontWeight: 600, 
+                    color: '#d4af37', 
+                    lineHeight: 1.15,
+                    marginBottom: '6px'
+                  }}>
+                    {selectedProfile.name}
+                  </h2>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ 
+                      fontSize: '0.82rem', 
+                      fontWeight: 700, 
+                      letterSpacing: '0.08em', 
+                      textTransform: 'uppercase', 
+                      color: 'var(--text-primary)',
+                      background: 'rgba(197, 160, 89, 0.1)',
+                      border: '1px solid rgba(197, 160, 89, 0.25)',
+                      padding: '2px 8px',
+                      borderRadius: '4px'
+                    }}>
+                      {selectedProfile.gender}
+                    </span>
+                    <span style={{ color: 'rgba(197, 160, 89, 0.65)', fontSize: '0.85rem' }}>•</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 500 }}>
+                      {selectedProfile.age} Years
+                    </span>
+                    <span style={{ color: 'rgba(197, 160, 89, 0.65)', fontSize: '0.85rem' }}>•</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 500 }}>
+                      {selectedProfile.height}
+                    </span>
+                  </div>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                    <MapPin size={14} style={{ color: '#d4af37' }} /> {selectedProfile.location}
+                  </p>
+                </div>
+
+                {/* Elegant Separator */}
+                <div style={{ 
+                  height: '1px', 
+                  background: 'linear-gradient(to right, rgba(197, 160, 89, 0), rgba(197, 160, 89, 0.35) 15%, rgba(197, 160, 89, 0.35) 85%, rgba(197, 160, 89, 0))', 
+                  margin: '20px 0' 
+                }} />
+
+                {/* Information Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
+                  
+                  {/* Personal Block */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <h3 style={{ fontSize: '0.85rem', color: '#d4af37', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}>
+                      Kundali & Family
+                    </h3>
+                    <div>
+                      <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Gotram</strong>
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.gotram}</span>
+                    </div>
+                  </div>
+
+                  {/* Professional Block */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <h3 style={{ fontSize: '0.85rem', color: '#d4af37', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px' }}>
+                      Education & Career
+                    </h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      <div>
+                        <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Education</strong>
+                        <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.education}</span>
+                      </div>
+                      <div>
+                        <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Occupation</strong>
+                        <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.occupation}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Organization</strong>
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.92rem' }}>{selectedProfile.company}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* About Profile */}
+                <div style={{ background: 'rgba(197, 160, 89, 0.02)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(197, 160, 89, 0.12)', marginBottom: '24px' }}>
+                  <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: '#d4af37', letterSpacing: '0.08em', marginBottom: '6px' }}>About Candidate</strong>
+                  <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+                    "{selectedProfile.bio}"
+                  </p>
+                </div>
+
+                {/* Contact Request Section */}
+                <div style={{ background: 'rgba(6, 182, 212, 0.02)', border: '1px solid rgba(6, 182, 212, 0.15)', padding: '20px', borderRadius: '16px' }}>
+                  <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--accent)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Heart size={16} style={{ color: 'var(--accent)', fill: 'rgba(6, 182, 212, 0.2)' }} /> Request Contact Details
+                  </h4>
+                  
+                  {requestStatus ? (
+                    <div style={{ 
+                      padding: '12px 16px', 
+                      borderRadius: '8px', 
+                      background: requestStatus.success ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', 
+                      border: `1px solid ${requestStatus.success ? 'var(--success)' : 'var(--danger)'}`, 
+                      color: requestStatus.success ? 'var(--success)' : 'var(--danger)', 
+                      fontSize: '0.85rem', 
+                      fontWeight: 500,
+                      textAlign: 'center' 
+                    }}>
+                      {requestStatus.message}
+                    </div>
+                  ) : (
+                    <form onSubmit={handleContactRequestSubmit} style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '12px' }}>
+                      <input 
+                        type="email" 
+                        className="form-input" 
+                        placeholder="Enter your registered email ID" 
+                        value={requestEmail}
+                        onChange={(e) => setRequestEmail(e.target.value)}
+                        required
+                        style={{ 
+                          flex: 1, 
+                          fontSize: '0.85rem', 
+                          background: 'rgba(8, 10, 16, 0.4)', 
+                          border: '1px solid rgba(197, 160, 89, 0.25)',
+                          borderRadius: '8px',
+                          color: '#fff',
+                          padding: '12px 16px'
+                        }}
+                      />
+                      <button 
+                        type="submit" 
+                        className="btn btn-primary"
+                        style={{ 
+                          padding: '12px 24px', 
+                          fontSize: '0.85rem', 
+                          fontWeight: 700, 
+                          borderRadius: '8px',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        Submit Request
+                      </button>
+                    </form>
+                  )}
+                </div>
+
               </div>
+
             </div>
 
-            {/* Details */}
-            <div style={{ background: 'rgba(255,255,255,0.02)', padding: 'var(--space-4)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', marginBottom: 'var(--space-5)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Gotram</strong>
-                  <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{selectedProfile.gotram}</span>
-                </div>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Education</strong>
-                  <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{selectedProfile.education}</span>
-                </div>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Occupation</strong>
-                  <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{selectedProfile.occupation}</span>
-                </div>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Organization</strong>
-                  <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{selectedProfile.company}</span>
-                </div>
-              </div>
-              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '10px' }}>
-                <strong style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '4px' }}>About</strong>
-                <p style={{ lineHeight: '1.45' }}>"{selectedProfile.bio}"</p>
-              </div>
-            </div>
-
-            {/* Contact Request Form */}
-            <div style={{ borderTop: '1px solid var(--border)', paddingTop: 'var(--space-4)' }}>
-              <h4 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Heart size={14} style={{ color: 'var(--accent)' }} /> Request Contact Details
-              </h4>
-              
-              {requestStatus ? (
-                <div style={{ padding: '10px 14px', borderRadius: 'var(--radius-sm)', background: requestStatus.success ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', border: `1px solid ${requestStatus.success ? 'var(--success)' : 'var(--danger)'}`, color: requestStatus.success ? 'var(--success)' : 'var(--danger)', fontSize: '0.8rem', textAlign: 'center' }}>
-                  {requestStatus.message}
-                </div>
-              ) : (
-                <form onSubmit={handleContactRequestSubmit} style={{ display: 'flex', gap: 'var(--space-2)' }}>
-                  <input 
-                    type="email" 
-                    className="form-input" 
-                    placeholder="Enter your registered email ID" 
-                    value={requestEmail}
-                    onChange={(e) => setRequestEmail(e.target.value)}
-                    required
-                    style={{ flex: 1, fontSize: '0.8rem' }}
-                  />
-                  <button type="submit" className="btn btn-primary btn-sm">
-                    Submit Request
-                  </button>
-                </form>
-              )}
-            </div>
           </div>
         </div>
       )}
