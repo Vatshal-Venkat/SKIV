@@ -1,7 +1,11 @@
 // SKIV.ONLINE - CMS API & Database Service (Connected to FastAPI Backend)
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
-const API_HOST_URL = API_BASE_URL.endsWith('/api') ? API_BASE_URL.slice(0, -4) : API_BASE_URL;
+let rawBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
+if (rawBaseUrl.endsWith('/')) {
+  rawBaseUrl = rawBaseUrl.slice(0, -1);
+}
+const API_BASE_URL = rawBaseUrl.endsWith('/api') ? rawBaseUrl : `${rawBaseUrl}/api`;
+const API_HOST_URL = API_BASE_URL.slice(0, -4);
 
 // Helper to get auth headers
 const getAuthHeaders = () => {
