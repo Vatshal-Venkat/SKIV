@@ -265,12 +265,27 @@ const MatrimonyPage = () => {
                 transform: scale(1);
               }
             }
+            .wedding-card-scroll::-webkit-scrollbar {
+              width: 6px;
+            }
+            .wedding-card-scroll::-webkit-scrollbar-track {
+              background: rgba(12, 15, 29, 0.5);
+              border-radius: 3px;
+            }
+            .wedding-card-scroll::-webkit-scrollbar-thumb {
+              background: rgba(197, 160, 89, 0.3);
+              border-radius: 3px;
+            }
+            .wedding-card-scroll::-webkit-scrollbar-thumb:hover {
+              background: rgba(197, 160, 89, 0.6);
+            }
           `}</style>
           <div 
             className="wedding-card-container" 
             style={{ 
               maxWidth: '860px', 
               width: '100%', 
+              height: isMobile ? 'auto' : '550px',
               background: '#0c0f1d', 
               border: '1px solid rgba(197, 160, 89, 0.45)', 
               borderRadius: '24px', 
@@ -412,11 +427,19 @@ const MatrimonyPage = () => {
               gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', 
               gap: '32px',
               position: 'relative',
-              zIndex: 2
+              zIndex: 2,
+              height: isMobile ? 'auto' : '470px'
             }}>
               
               {/* Left Column: Elegant Arch Photo Frame & Gallery */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '16px', 
+                alignItems: 'center',
+                height: isMobile ? 'auto' : '100%',
+                justifyContent: isMobile ? 'flex-start' : 'center'
+              }}>
                 {selectedProfile.photo_urls && selectedProfile.photo_urls.length > 0 && (
                   <div style={{ width: '100%' }}>
                     {/* Royal Arch Frame */}
@@ -486,13 +509,22 @@ const MatrimonyPage = () => {
               </div>
 
               {/* Right Column: Invitation details */}
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div 
+                className="wedding-card-scroll"
+                style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  height: isMobile ? 'auto' : '100%',
+                  overflowY: isMobile ? 'visible' : 'auto',
+                  paddingRight: isMobile ? '0' : '6px'
+                }}
+              >
                 
                 {/* Header Section */}
                 <div>
                   <h2 style={{ 
                     fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", 
-                    fontSize: isMobile ? '2.1rem' : '2.6rem', 
+                    fontSize: isMobile ? '2.1rem' : (selectedProfile.name.length > 22 ? '2rem' : '2.4rem'), 
                     fontWeight: 600, 
                     color: '#d4af37', 
                     lineHeight: 1.15,
