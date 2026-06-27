@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Download } from 'lucide-react';
+import { ChevronRight, Download, Heart } from 'lucide-react';
 import lekhaEnglish from '../assets/lekha_english.png';
 import lekhaTelugu from '../assets/lekha_telugu.png';
 
@@ -109,19 +109,63 @@ const RightSidebar = () => {
       {/* Featured Matrimonial Match (Vivaha Vedika) */}
       <div className="sidebar-widget">
         <div className="sidebar-widget__body">
-          <h4 className="section-title" style={{ color: 'var(--gold)' }}>VIVAHA VEDIKA</h4>
+          <h4 className="section-title" style={{ color: 'var(--gold)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Heart size={15} fill="var(--gold)" style={{ color: 'var(--gold)' }} /> VIVAHA VEDIKA
+          </h4>
           <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-3)' }}>
-            Featured matrimonial profile in our community lobby:
+            Connect with verified profiles within the Sistakaranam fraternity.
           </p>
-          <div className="featured-profile">
-            <img src="/images/avatar1.png" alt="Featured Profile" className="profile-avatar" />
-            <div className="profile-details">
-              <span className="profile-name">Sri V. Rahul Karanam</span>
-              <span className="profile-meta">28 Yrs • B.Tech (Software Developer) • Bangalore</span>
+          
+          <div style={{
+            position: 'relative',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            border: '1px solid rgba(197, 160, 89, 0.35)',
+            marginBottom: '12px',
+            height: '140px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5), 0 0 15px rgba(197, 160, 89, 0.15)'
+          }}>
+            <img 
+              src="/wedding.jpeg" 
+              alt="Vivaha Vedika Matrimony" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+            />
+            {/* Elegant overlay gradient */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to top, rgba(8, 10, 16, 0.95) 0%, rgba(8, 10, 16, 0.2) 100%)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              padding: '12px'
+            }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#d4af37', fontFamily: "'Space Grotesk', sans-serif" }}>
+                Vivaha Vedika Registry
+              </span>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>
+                350+ Verified Profiles Live
+              </span>
             </div>
           </div>
-          <Link to="/matrimony" className="btn btn-secondary btn-sm btn-block" style={{ marginTop: 'var(--space-4)' }}>
-            Browse Matrimony Lobby
+
+          <Link 
+            to="/matrimony" 
+            className="btn btn-secondary btn-sm btn-block" 
+            style={{ 
+              marginTop: '8px', 
+              color: '#d4af37', 
+              borderColor: 'rgba(197, 160, 89, 0.45)', 
+              background: 'rgba(197, 160, 89, 0.05)', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '6px',
+              fontSize: '0.8rem',
+              fontWeight: 750
+            }}
+          >
+            <Heart size={12} fill="#d4af37" /> Enter Matrimony Lobby
           </Link>
         </div>
       </div>
