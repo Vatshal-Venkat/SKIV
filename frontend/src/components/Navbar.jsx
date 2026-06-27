@@ -42,38 +42,38 @@ const navLinks = [
     label: 'COMMUNITY',
     href: '#',
     dropdown: [
-      { label: 'Forum Lobby', href: '#' },
-      { label: 'Discussions', href: '#' },
       { label: 'Events Hub', href: '/events' },
-      { label: 'Jobs & Careers', href: '/jobs' }
+      { label: 'Jobs & Careers', href: '/jobs' },
+      { label: 'Business Listings', href: '/business-listings' },
+      { label: 'Our YouTubers', href: '/youtubers' },
+      { label: 'Our Journalists', href: '/journalists' }
     ]
   },
   {
     label: 'CHRONICLES',
     href: '#',
     dropdown: [
-      { label: 'Community History', href: '#' },
-      { label: 'Interactive Timeline', href: '#' },
-      { label: 'Archives & Records', href: '#' }
+      { label: 'Lekha Newsletters', href: '/lekha-newsletters' },
+      { label: 'Official Reports', href: '/reports' },
+      { label: 'Photo Gallery', href: '/gallery' }
     ]
   },
   {
     label: 'RESOURCES',
     href: '#',
     dropdown: [
-      { label: 'Official Documents', href: '#' },
-      { label: 'Community Publications', href: '#' },
-      { label: 'Media Gallery', href: '#' },
-      { label: 'Join as Developer', href: '#', accent: true }
+      { label: 'Government Notifications', href: '/gov-notifications' },
+      { label: 'Historical Profile', href: '/history' },
+      { label: 'Surnames & Gotrams', href: '/identities' }
     ]
   },
   {
     label: 'PEOPLE',
     href: '#',
     dropdown: [
-      { label: 'Matrimony Lobby', href: '/matrimony' },
+      { label: 'Matrimony Registry', href: '/matrimony' },
       { label: 'Community Directory', href: '/directory' },
-      { label: 'Formal Associations', href: '#' }
+      { label: 'Our Fraternity', href: '/fraternity' }
     ]
   }
 ];

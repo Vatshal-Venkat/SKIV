@@ -11,6 +11,16 @@ import NewsDetailPage from './pages/NewsDetailPage';
 import JobsPage from './pages/JobsPage';
 import EventsPage from './pages/EventsPage';
 import DirectoryPage from './pages/DirectoryPage';
+import FraternityPage from './pages/FraternityPage';
+import BusinessListingsPage from './pages/BusinessListingsPage';
+import YouTubersPage from './pages/YouTubersPage';
+import JournalistsPage from './pages/JournalistsPage';
+import LekhaNewslettersPage from './pages/LekhaNewslettersPage';
+import ReportsPage from './pages/ReportsPage';
+import PhotoGalleryPage from './pages/PhotoGalleryPage';
+import GovNotificationsPage from './pages/GovNotificationsPage';
+import HistoryPage from './pages/HistoryPage';
+import IdentitiesPage from './pages/IdentitiesPage';
 import DemoLogin from './components/DemoLogin';
 import { apiService } from './services/api';
 import './App.css';
@@ -48,13 +58,23 @@ function App() {
         />
         <div className="app-content">
           <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/matrimony" element={<MatrimonyPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/news/:id" element={<NewsDetailPage />} />
-            <Route path="/jobs" element={<JobsPage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/directory" element={<DirectoryPage />} />
+             <Route path="/" element={<LandingPage />} />
+             <Route path="/matrimony" element={<MatrimonyPage />} />
+             <Route path="/admin" element={<AdminPage />} />
+             <Route path="/news/:id" element={<NewsDetailPage />} />
+             <Route path="/jobs" element={<JobsPage />} />
+             <Route path="/events" element={<EventsPage />} />
+             <Route path="/directory" element={<DirectoryPage />} />
+             <Route path="/fraternity" element={<FraternityPage />} />
+             <Route path="/business-listings" element={<BusinessListingsPage />} />
+             <Route path="/youtubers" element={<YouTubersPage />} />
+             <Route path="/journalists" element={<JournalistsPage />} />
+             <Route path="/lekha-newsletters" element={<LekhaNewslettersPage />} />
+             <Route path="/reports" element={<ReportsPage />} />
+             <Route path="/gallery" element={<PhotoGalleryPage />} />
+             <Route path="/gov-notifications" element={<GovNotificationsPage />} />
+             <Route path="/history" element={<HistoryPage />} />
+             <Route path="/identities" element={<IdentitiesPage />} />
           </Routes>
         </div>
 
