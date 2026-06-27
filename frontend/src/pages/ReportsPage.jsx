@@ -12,8 +12,8 @@ const ReportsPage = () => {
       category: "Audits",
       date: "30 Apr 2026",
       size: "2.1 MB",
-      signatory: "Sistakaranam Ikyavedika (Central Board)",
-      authName: "G. V. Patnaik & Associates, Chartered Accountants"
+      downloads: "182",
+      authName: "G. V. Patnaik & Associates, CA"
     },
     {
       id: 2,
@@ -21,44 +21,100 @@ const ReportsPage = () => {
       category: "Audits",
       date: "15 Jan 2026",
       size: "1.8 MB",
-      signatory: "AISKA Welfare Trust",
+      downloads: "293",
       authName: "K. R. Patnaik, Auditor"
     },
+    // Category 4: Real Events Reports from DB
     {
       id: 3,
-      name: "Ikyavedika Matrimony Meet-2026 Event Report",
+      name: "Lekha Annual Awards 2024 (లేఖ ఏన్యువల్ అవార్డ్స్ 2024)",
       category: "Events",
-      date: "10 Jun 2026",
-      size: "3.4 MB",
-      signatory: "Matrimonial Sub-Committee",
-      authName: "Rama Devi Patnaik, Convener"
+      date: "12 Jan 2025",
+      size: "3.31 MB",
+      downloads: "714",
+      authName: "Naraharinath Sekharamantri"
     },
     {
       id: 4,
-      name: "AISKA Golden Jubilee Convention Wrap-up & Financials",
+      name: "Butterfly Meet Report - Jan 2022 (సీతాకోకచిలుక సమావేశ నివేదిక)",
       category: "Events",
-      date: "25 Oct 2025",
-      size: "4.5 MB",
-      signatory: "AISKA National Committee",
-      authName: "S. C. Patnaik, President"
+      date: "16 Jan 2022",
+      size: "2.52 MB",
+      downloads: "553",
+      authName: "Naraharinath Sekharamantri"
     },
     {
       id: 5,
-      name: "Minutes of General Body Meeting - Hyderabad Chapter",
-      category: "Meetings",
-      date: "12 May 2026",
-      size: "820 KB",
-      signatory: "Telangana State Executive Council",
-      authName: "G. Venkata Ramana, Secretary"
+      name: "Vivaha Vedika & Web Site Launch - Ugadi 2021 (వివాహ వేదిక & వెబ్ సైట్ ఆవిష్కరణ)",
+      category: "Events",
+      date: "13 Apr 2021",
+      size: "1015.39 KB",
+      downloads: "563",
+      authName: "Naraharinath Sekharamantri"
     },
     {
       id: 6,
-      name: "Resolutions on Reservation Category BC-D Caste Certs",
+      name: "Dasara Sambaralu - దసరా సంబరాలు",
+      category: "Events",
+      date: "05 Nov 2020",
+      size: "6.62 MB",
+      downloads: "746",
+      authName: "Naraharinath Sekharamantri"
+    },
+    {
+      id: 7,
+      name: "Independence Day Report - స్వాతంత్ర్య దిన ఉత్సవ నివేదిక",
+      category: "Events",
+      date: "17 Aug 2020",
+      size: "3.27 MB",
+      downloads: "786",
+      authName: "Naraharinath Sekharamantri"
+    },
+    // Category 1: Real Minutes of Meetings from DB
+    {
+      id: 8,
+      name: "Minutes of Meeting - 25-07-2020",
       category: "Meetings",
-      date: "08 Mar 2026",
-      size: "1.2 MB",
-      signatory: "Joint Action Committee (JAC)",
-      authName: "K. Mohana Rao Patnaik, Convener"
+      date: "25 Jul 2020",
+      size: "167.81 KB",
+      downloads: "552",
+      authName: "Naraharinath Sekharamantri"
+    },
+    {
+      id: 9,
+      name: "Minutes of Meeting - 11-07-2020",
+      category: "Meetings",
+      date: "11 Jul 2020",
+      size: "171.44 KB",
+      downloads: "454",
+      authName: "Naraharinath Sekharamantri"
+    },
+    {
+      id: 10,
+      name: "Minutes of Meeting - 04-07-2020",
+      category: "Meetings",
+      date: "04 Jul 2020",
+      size: "172.40 KB",
+      downloads: "450",
+      authName: "Naraharinath Sekharamantri"
+    },
+    {
+      id: 11,
+      name: "Minutes of Meeting - 18-07-2020",
+      category: "Meetings",
+      date: "18 Jul 2020",
+      size: "204.28 KB",
+      downloads: "457",
+      authName: "Naraharinath Sekharamantri"
+    },
+    {
+      id: 12,
+      name: "Minutes of Meeting - 08-08-2020",
+      category: "Meetings",
+      date: "08 Aug 2020",
+      size: "156.27 KB",
+      downloads: "433",
+      authName: "Naraharinath Sekharamantri"
     }
   ];
 
@@ -154,7 +210,7 @@ const ReportsPage = () => {
                   <span>•</span>
                   <span>Size: {doc.size}</span>
                   <span>•</span>
-                  <span>Signatory: {doc.signatory}</span>
+                  <span>Downloads: {doc.downloads}</span>
                 </div>
               </div>
             </div>
@@ -162,7 +218,7 @@ const ReportsPage = () => {
             {/* Auditor Details & Action */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                <span style={{ display: 'block', fontSize: '0.68rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Certified By</span>
+                <span style={{ display: 'block', fontSize: '0.68rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Author</span>
                 <strong>{doc.authName}</strong>
               </div>
               <button 

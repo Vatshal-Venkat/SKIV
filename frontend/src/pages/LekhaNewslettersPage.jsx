@@ -3,59 +3,99 @@ import PageWrapper from '../components/PageWrapper';
 import { Download, BookOpen, Calendar, ArrowRight, X } from 'lucide-react';
 
 const LekhaNewslettersPage = () => {
-  const [selectedYear, setSelectedYear] = useState('2026');
+  const [selectedYear, setSelectedYear] = useState('2022');
   const [readModal, setReadModal] = useState(null); // newsletter object
 
   const newsletters = [
+    // Real 2022 Newsletters from DB
     {
       id: 1,
-      title: "Lekha June 2026 Edition",
-      year: "2026",
-      publishedDate: "01 Jun 2026",
-      size: "4.2 MB",
-      downloads: 120,
+      title: "Lekha February 2022 Edition",
+      type: "Newsletter",
+      year: "2022",
+      publishedDate: "06 Feb 2022",
+      size: "5.03 MB",
+      downloads: 579,
       coverBg: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
-      mainStories: ["Matrimonial Meet Wrap-up", "Odisha Association Annual Budget", "BC-D Caste G.O. updates"]
+      mainStories: ["Matrimonial Hub Launch", "Annual General Body resolutions", "State caste welfare updates"]
     },
     {
       id: 2,
-      title: "Lekha May 2026 Edition",
-      year: "2026",
-      publishedDate: "01 May 2026",
-      size: "3.8 MB",
-      downloads: 194,
+      title: "లేఖ (ఫిబ్రవరి 2022)",
+      type: "Newsletter",
+      year: "2022",
+      publishedDate: "06 Feb 2022",
+      size: "4.93 MB",
+      downloads: 547,
       coverBg: "linear-gradient(135deg, #0f172a 0%, #064e3b 100%)",
-      mainStories: ["Youth Entrepreneurship Forum", "Surnames Mapping Projects", "Gautama Gotram History"]
+      mainStories: ["కార్తీక వనభోజన మహోత్సవం", "శేఖి యాన్యువల్ అవార్డ్స్ విజేతలు", "సంక్షేమ సంఘాల కమిటీ నివేదిక"]
     },
     {
       id: 3,
-      title: "Lekha April 2026 Edition",
-      year: "2026",
-      publishedDate: "01 Apr 2026",
-      size: "4.5 MB",
-      downloads: 231,
+      title: "Lekha January 2022 Edition",
+      type: "Newsletter",
+      year: "2022",
+      publishedDate: "02 Jan 2022",
+      size: "4.96 MB",
+      downloads: 628,
       coverBg: "linear-gradient(135deg, #0f172a 0%, #311042 100%)",
-      mainStories: ["Ugadi Festival Celebrations", "AISKA Hyderabad Executive Elections", "BC Reservation circulars"]
+      mainStories: ["Butterfly Trip Reports", "Sankranti Cultural Calendar", "Caste Certificate Application guide"]
     },
     {
       id: 4,
-      title: "Lekha December 2025 Edition",
-      year: "2025",
-      publishedDate: "01 Dec 2025",
-      size: "4.1 MB",
-      downloads: 412,
+      title: "లేఖ (జనవరి 2022)",
+      type: "Newsletter",
+      year: "2022",
+      publishedDate: "02 Jan 2022",
+      size: "4.32 MB",
+      downloads: 532,
       coverBg: "linear-gradient(135deg, #0f172a 0%, #581c87 100%)",
-      mainStories: ["Kalam Snehithulu Poetry Meets", "Bhubaneswar Directory Releases", "Annual Scholarship distribution"]
+      mainStories: ["సీతాకోకచిలుక సమావేశ నివేదిక", "సంక్రాంతి శుభాకాంక్షలు", "జీవనోపాధి నైపుణ్యాల శిక్షణ"]
     },
+    // Real 2021 Newsletters from DB
     {
       id: 5,
-      title: "Lekha November 2025 Edition",
-      year: "2025",
-      publishedDate: "01 Nov 2025",
-      size: "3.9 MB",
-      downloads: 389,
+      title: "Lekha December 2021 Edition",
+      type: "Newsletter",
+      year: "2021",
+      publishedDate: "04 Dec 2021",
+      size: "6.01 MB",
+      downloads: 531,
       coverBg: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-      mainStories: ["Job Fair Placements", "Atreya Gotram Genealogies", "Community Trust Audited Reports"]
+      mainStories: ["Kalam Snehithulu Poetry Meet", "Atreya Gotram Genealogies", "Community Trust annual budget"]
+    },
+    {
+      id: 6,
+      title: "లేఖ (డిసెంబర్ 2021)",
+      type: "Newsletter",
+      year: "2021",
+      publishedDate: "04 Dec 2021",
+      size: "5.21 MB",
+      downloads: 572,
+      coverBg: "linear-gradient(135deg, #0f172a 0%, #3b82f6 100%)",
+      mainStories: ["కళాకారుల సన్మానం", "ఆత్రేయ గోత్ర వంశ వృక్షం", "కార్తీక వనభోజనాల ఏర్పాట్లు"]
+    },
+    {
+      id: 7,
+      title: "Lekha November 2021 Edition",
+      type: "Newsletter",
+      year: "2021",
+      publishedDate: "06 Nov 2021",
+      size: "5.23 MB",
+      downloads: 586,
+      coverBg: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
+      mainStories: ["Job Fair Placements", "Bhubaneswar Directory Releases", "Annual Scholarship distribution"]
+    },
+    {
+      id: 8,
+      title: "లేఖ (నవంబర్ 2021)",
+      type: "Newsletter",
+      year: "2021",
+      publishedDate: "06 Nov 2021",
+      size: "3.96 MB",
+      downloads: 504,
+      coverBg: "linear-gradient(135deg, #0f172a 0%, #064e3b 100%)",
+      mainStories: ["ఉద్యోగ నియామకాలు", "భువనేశ్వర్ డైరెక్టరీ విడుదల", "మెరిట్ విద్యార్థులకు పురస్కారాలు"]
     }
   ];
 
@@ -74,7 +114,7 @@ const LekhaNewslettersPage = () => {
         borderBottom: '1px solid var(--border)',
         paddingBottom: '12px'
       }}>
-        {["2026", "2025", "2024", "Archived"].map(year => {
+        {["2022", "2021", "Archived"].map(year => {
           const isActive = selectedYear === year;
           return (
             <button
