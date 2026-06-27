@@ -285,7 +285,7 @@ const MatrimonyPage = () => {
             style={{ 
               maxWidth: '860px', 
               width: '100%', 
-              height: isMobile ? 'auto' : '550px',
+              height: isMobile ? 'auto' : '580px',
               background: '#0c0f1d', 
               border: '1px solid rgba(197, 160, 89, 0.45)', 
               borderRadius: '24px', 
@@ -428,7 +428,7 @@ const MatrimonyPage = () => {
               gap: '32px',
               position: 'relative',
               zIndex: 2,
-              height: isMobile ? 'auto' : '470px'
+              height: isMobile ? 'auto' : '500px'
             }}>
               
               {/* Left Column: Elegant Arch Photo Frame & Gallery */}
@@ -564,7 +564,7 @@ const MatrimonyPage = () => {
                 <div style={{ 
                   height: '1px', 
                   background: 'linear-gradient(to right, rgba(197, 160, 89, 0), rgba(197, 160, 89, 0.35) 15%, rgba(197, 160, 89, 0.35) 85%, rgba(197, 160, 89, 0))', 
-                  margin: '20px 0' 
+                  margin: '10px 0' 
                 }} />
 
                 {/* Unified Information Grid */}
@@ -572,7 +572,7 @@ const MatrimonyPage = () => {
                   display: 'grid', 
                   gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
                   gap: '16px', 
-                  marginBottom: '24px' 
+                  marginBottom: '16px' 
                 }}>
                   {/* Gotram Card */}
                   <div style={{ 
@@ -632,7 +632,7 @@ const MatrimonyPage = () => {
                 </div>
 
                 {/* About Profile */}
-                <div style={{ background: 'rgba(197, 160, 89, 0.02)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(197, 160, 89, 0.12)', marginBottom: '24px' }}>
+                <div style={{ background: 'rgba(197, 160, 89, 0.02)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(197, 160, 89, 0.12)', marginBottom: '16px' }}>
                   <strong style={{ display: 'block', fontSize: '0.7rem', textTransform: 'uppercase', color: '#d4af37', letterSpacing: '0.08em', marginBottom: '6px' }}>About Candidate</strong>
                   <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
                     "{selectedProfile.bio}"
@@ -640,7 +640,7 @@ const MatrimonyPage = () => {
                 </div>
 
                 {/* Contact Request Section */}
-                <div style={{ background: 'rgba(6, 182, 212, 0.02)', border: '1px solid rgba(6, 182, 212, 0.15)', padding: '20px', borderRadius: '16px' }}>
+                <div style={{ background: 'rgba(6, 182, 212, 0.02)', border: '1px solid rgba(6, 182, 212, 0.15)', padding: '16px', borderRadius: '16px' }}>
                   <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--accent)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Heart size={16} style={{ color: 'var(--accent)', fill: 'rgba(6, 182, 212, 0.2)' }} /> Request Contact Details
                   </h4>
