@@ -9,7 +9,7 @@ from app.routers.deps import get_admin_user
 
 router = APIRouter(prefix="/api/media", tags=["Media / Uploads"])
 
-ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".pdf"}
 
 @router.post("/upload")
 def upload_file(
