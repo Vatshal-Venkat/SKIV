@@ -147,6 +147,9 @@ const LekhaNewslettersPage = () => {
                 <div style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                   <p style={{ fontSize: '0.85rem', color: '#d4af37', fontWeight: 700 }}>{issue.title.replace('Lekha', '').replace('లేఖ', '').trim()}</p>
                   <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)', marginTop: '2px' }}>{issue.publishedDate}</p>
+                  {issue.author && (
+                    <p style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.5)', fontStyle: 'italic', marginTop: '2px' }}>{issue.author}</p>
+                  )}
                 </div>
               </div>
 
@@ -203,7 +206,9 @@ const LekhaNewslettersPage = () => {
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#d4af37', fontFamily: "'Space Grotesk', sans-serif" }}>
                   {readModal.title}
                 </h3>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Published: {readModal.publishedDate}</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                  Published: {readModal.publishedDate} {readModal.author && ` • ${readModal.author}`}
+                </span>
               </div>
               <button 
                 onClick={() => setReadModal(null)}
