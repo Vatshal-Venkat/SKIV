@@ -1,105 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageWrapper from '../components/PageWrapper';
-import { Download, BookOpen, Calendar, ArrowRight, X } from 'lucide-react';
+import { Download, BookOpen, Calendar, ArrowRight, X, Info } from 'lucide-react';
+import { apiService } from '../services/api';
 
 const LekhaNewslettersPage = () => {
   const [selectedYear, setSelectedYear] = useState('2022');
   const [readModal, setReadModal] = useState(null); // newsletter object
+  const [newsletters, setNewsletters] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const newsletters = [
-    // Real 2022 Newsletters from DB
-    {
-      id: 1,
-      title: "Lekha February 2022 Edition",
-      type: "Newsletter",
-      year: "2022",
-      publishedDate: "06 Feb 2022",
-      size: "5.03 MB",
-      downloads: 579,
-      coverBg: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
-      mainStories: ["Matrimonial Hub Launch", "Annual General Body resolutions", "State caste welfare updates"]
-    },
-    {
-      id: 2,
-      title: "లేఖ (ఫిబ్రవరి 2022)",
-      type: "Newsletter",
-      year: "2022",
-      publishedDate: "06 Feb 2022",
-      size: "4.93 MB",
-      downloads: 547,
-      coverBg: "linear-gradient(135deg, #0f172a 0%, #064e3b 100%)",
-      mainStories: ["కార్తీక వనభోజన మహోత్సవం", "శేఖి యాన్యువల్ అవార్డ్స్ విజేతలు", "సంక్షేమ సంఘాల కమిటీ నివేదిక"]
-    },
-    {
-      id: 3,
-      title: "Lekha January 2022 Edition",
-      type: "Newsletter",
-      year: "2022",
-      publishedDate: "02 Jan 2022",
-      size: "4.96 MB",
-      downloads: 628,
-      coverBg: "linear-gradient(135deg, #0f172a 0%, #311042 100%)",
-      mainStories: ["Butterfly Trip Reports", "Sankranti Cultural Calendar", "Caste Certificate Application guide"]
-    },
-    {
-      id: 4,
-      title: "లేఖ (జనవరి 2022)",
-      type: "Newsletter",
-      year: "2022",
-      publishedDate: "02 Jan 2022",
-      size: "4.32 MB",
-      downloads: 532,
-      coverBg: "linear-gradient(135deg, #0f172a 0%, #581c87 100%)",
-      mainStories: ["సీతాకోకచిలుక సమావేశ నివేదిక", "సంక్రాంతి శుభాకాంక్షలు", "జీవనోపాధి నైపుణ్యాల శిక్షణ"]
-    },
-    // Real 2021 Newsletters from DB
-    {
-      id: 5,
-      title: "Lekha December 2021 Edition",
-      type: "Newsletter",
-      year: "2021",
-      publishedDate: "04 Dec 2021",
-      size: "6.01 MB",
-      downloads: 531,
-      coverBg: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-      mainStories: ["Kalam Snehithulu Poetry Meet", "Atreya Gotram Genealogies", "Community Trust annual budget"]
-    },
-    {
-      id: 6,
-      title: "లేఖ (డిసెంబర్ 2021)",
-      type: "Newsletter",
-      year: "2021",
-      publishedDate: "04 Dec 2021",
-      size: "5.21 MB",
-      downloads: 572,
-      coverBg: "linear-gradient(135deg, #0f172a 0%, #3b82f6 100%)",
-      mainStories: ["కళాకారుల సన్మానం", "ఆత్రేయ గోత్ర వంశ వృక్షం", "కార్తీక వనభోజనాల ఏర్పాట్లు"]
-    },
-    {
-      id: 7,
-      title: "Lekha November 2021 Edition",
-      type: "Newsletter",
-      year: "2021",
-      publishedDate: "06 Nov 2021",
-      size: "5.23 MB",
-      downloads: 586,
-      coverBg: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
-      mainStories: ["Job Fair Placements", "Bhubaneswar Directory Releases", "Annual Scholarship distribution"]
-    },
-    {
-      id: 8,
-      title: "లేఖ (నవంబర్ 2021)",
-      type: "Newsletter",
-      year: "2021",
-      publishedDate: "06 Nov 2021",
-      size: "3.96 MB",
-      downloads: 504,
-      coverBg: "linear-gradient(135deg, #0f172a 0%, #064e3b 100%)",
-      mainStories: ["ఉద్యోగ నియామకాలు", "భువనేశ్వర్ డైరెక్టరీ విడుదల", "మెరిట్ విద్యార్థులకు పురస్కారాలు"]
+  useEffect(() => {
+    const fetchNewslettersList = async () => {
+      setLoading(true);
+      try {
+        const data = await apiService.getNewsletters();
+        setNewsletters(data);
+      } catch (err) {
+        console.error("Failed to load newsletters:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNewslettersList();
+  }, []);
+
+  const handleDownload = async (issue) => {
+    try {
+      const updated = await apiService.trackNewsletterDownload(issue.id);
+      setNewsletters(prev => prev.map(item => item.id === issue.id ? updated : item));
+      if (issue.file_url) {
+        window.open(issue.file_url, '_blank');
+      } else {
+        alert("No PDF file URL attached.");
+      }
+    } catch (err) {
+      console.error("Download tracking failed:", err);
+      if (issue.file_url) {
+        window.open(issue.file_url, '_blank');
+      }
     }
-  ];
+  };
 
-  const filteredNewsletters = newsletters.filter(item => item.year === selectedYear);
+  const filteredNewsletters = newsletters.filter(item => {
+    if (selectedYear === 'Archived') {
+      return item.year !== '2022' && item.year !== '2021';
+    }
+    return item.year === selectedYear;
+  });
 
   return (
     <PageWrapper 
@@ -150,7 +97,12 @@ const LekhaNewslettersPage = () => {
       </div>
 
       {/* Grid Layout */}
-      {filteredNewsletters.length === 0 ? (
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-secondary)' }}>
+          <div className="spinner" style={{ border: '3px solid var(--border)', borderTop: '3px solid var(--accent)', borderRadius: '50%', width: '36px', height: '36px', animation: 'spin 1s linear infinite', margin: '0 auto var(--space-4)' }}></div>
+          Loading newsletters...
+        </div>
+      ) : filteredNewsletters.length === 0 ? (
         <div style={{ color: 'var(--text-secondary)', padding: '60px 0', textAlign: 'center' }}>
           No newsletter files uploaded for the year {selectedYear}.
         </div>
@@ -224,14 +176,13 @@ const LekhaNewslettersPage = () => {
                     >
                       <BookOpen size={12} /> Read
                     </button>
-                    <a 
-                      href="#" 
-                      onClick={(e) => { e.preventDefault(); alert("Mock download initiated."); }}
+                    <button 
+                      onClick={() => handleDownload(issue)}
                       className="btn btn-secondary btn-sm" 
                       style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '0.8rem' }}
                     >
                       <Download size={12} /> Download
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -298,7 +249,7 @@ const LekhaNewslettersPage = () => {
 
             {/* Modal Footer */}
             <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 24px', borderTop: '1px solid var(--border)', background: 'rgba(21, 25, 38, 0.6)' }}>
-              <button className="btn btn-secondary btn-sm" onClick={() => { alert("Mock download initiated."); setReadModal(null); }}>
+              <button className="btn btn-secondary btn-sm" onClick={() => { handleDownload(readModal); setReadModal(null); }}>
                 <Download size={14} /> Download PDF File
               </button>
             </div>
