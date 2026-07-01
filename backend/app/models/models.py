@@ -111,3 +111,19 @@ class DirectoryMember(Base):
     phone = Column(String(100), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class Newsletter(Base):
+    __tablename__ = "newsletters"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(255), nullable=False)
+    type = Column(String(100), default="Newsletter", nullable=False)
+    year = Column(String(50), nullable=False)
+    published_date = Column(String(100), nullable=False)
+    size = Column(String(50), nullable=False)
+    downloads = Column(Integer, default=0, nullable=False)
+    cover_bg = Column(String(255), nullable=True)
+    main_stories = Column(Text, nullable=True)  # Store key stories as a comma-separated string
+    file_url = Column(String(255), nullable=False)  # Cloudinary file link
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
