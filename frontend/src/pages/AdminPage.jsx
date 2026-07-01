@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Plus, Search, Edit2, Trash2, ShieldAlert, Check, X, 
   Upload, UserCheck, FileText, ChevronRight, RefreshCw, AlertCircle,
-  Briefcase, Calendar, Users
+  Briefcase, Calendar, Users, BookOpen
 } from 'lucide-react';
 import { apiService } from '../services/api';
 
 const AdminPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('matrimony'); // 'matrimony' | 'news' | 'events' | 'jobs' | 'directory'
+  const [activeTab, setActiveTab] = useState('matrimony'); // 'matrimony' | 'news' | 'events' | 'jobs' | 'directory' | 'newsletters'
   const [currentUser, setCurrentUser] = useState(null);
   
   // Loading & Error states
@@ -23,6 +23,7 @@ const AdminPage = () => {
   const [events, setEvents] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [directory, setDirectory] = useState([]);
+  const [newsletters, setNewsletters] = useState([]);
   
   // Search states
   const [profileSearch, setProfileSearch] = useState('');
@@ -30,6 +31,7 @@ const AdminPage = () => {
   const [eventsSearch, setEventsSearch] = useState('');
   const [jobsSearch, setJobsSearch] = useState('');
   const [directorySearch, setDirectorySearch] = useState('');
+  const [newslettersSearch, setNewslettersSearch] = useState('');
   
   // Editor/Modal states
   const [activeProfileEditor, setActiveProfileEditor] = useState(null);
@@ -37,7 +39,19 @@ const AdminPage = () => {
   const [activeEventEditor, setActiveEventEditor] = useState(null);
   const [activeJobEditor, setActiveJobEditor] = useState(null);
   const [activeDirectoryEditor, setActiveDirectoryEditor] = useState(null);
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null); // null | { type: 'profile'|'news'|'event'|'job'|'member', id: number, name: string }
+  const [activeNewsletterEditor, setActiveNewsletterEditor] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null); // null | { type: 'profile'|'news'|'event'|'job'|'member'|'newsletter', id: number, name: string }
+
+  // Form states - Newsletter
+  const [newsletterForm, setNewsletterForm] = useState({
+    title: '',
+    year: '2022',
+    published_date: '',
+    size: '5.0 MB',
+    cover_bg: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)',
+    mainStories: '',
+    file_url: ''
+  });
 
   // Form states - Matrimony Profile
   const [profileForm, setProfileForm] = useState({
@@ -124,12 +138,14 @@ const AdminPage = () => {
       const eventData = await apiService.getEvents();
       const jobData = await apiService.getJobs();
       const directoryData = await apiService.getDirectory();
+      const newsletterData = await apiService.getNewsletters();
       
       setProfiles(profileData);
       setNews(newsData);
       setEvents(eventData);
       setJobs(jobData);
       setDirectory(directoryData);
+      setNewsletters(newsletterData);
     } catch (err) {
       setErrorMsg('Failed to load database records. Please make sure the backend server is running.');
       console.error(err);
@@ -150,9 +166,11 @@ const AdminPage = () => {
         setProfileForm(prev => ({ ...prev, photo_url_1: response.url }));
       } else if (type === 'news') {
         setNewsForm(prev => ({ ...prev, thumbnail_url: response.url }));
+      } else if (type === 'newsletter') {
+        setNewsletterForm(prev => ({ ...prev, file_url: response.url, size: `${(file.size / (1024 * 1024)).toFixed(2)} MB` }));
       }
     } catch (err) {
-      setErrorMsg(err.message || 'Image upload failed. Please verify size and format.');
+      setErrorMsg(err.message || 'File upload failed. Please verify size and format.');
     } finally {
       setActionLoading(false);
     }
@@ -417,6 +435,39 @@ const AdminPage = () => {
     }
   };
 
+  // Newsletter CRUD Handlers
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    setActionLoading(true);
+    setErrorMsg('');
+
+    try {
+      if (activeNewsletterEditor === 'add') {
+        await apiService.createNewsletter(newsletterForm);
+      }
+      setActiveNewsletterEditor(null);
+      await fetchData();
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to save newsletter.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const openNewsletterEditor = () => {
+    setErrorMsg('');
+    setNewsletterForm({
+      title: '',
+      year: '2022',
+      published_date: new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }),
+      size: '0.0 MB',
+      cover_bg: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)',
+      mainStories: '',
+      file_url: ''
+    });
+    setActiveNewsletterEditor('add');
+  };
+
   // Delete Confirmation Handlers
   const triggerDeleteCheck = (type, item) => {
     const name = (type === 'profile' || type === 'member') ? item.name : item.title;
@@ -440,6 +491,8 @@ const AdminPage = () => {
         await apiService.deleteJob(id);
       } else if (type === 'member') {
         await apiService.deleteDirectoryMember(id);
+      } else if (type === 'newsletter') {
+        await apiService.deleteNewsletter(id);
       }
       setDeleteConfirmation(null);
       await fetchData();
@@ -497,6 +550,11 @@ const AdminPage = () => {
     (m.gotram && m.gotram.toLowerCase().includes(directorySearch.toLowerCase())) ||
     m.profession.toLowerCase().includes(directorySearch.toLowerCase()) ||
     m.location.toLowerCase().includes(directorySearch.toLowerCase())
+  );
+
+  const filteredNewslettersList = newsletters.filter(n => 
+    n.title.toLowerCase().includes(newslettersSearch.toLowerCase()) ||
+    n.year.toLowerCase().includes(newslettersSearch.toLowerCase())
   );
 
   return (
@@ -647,6 +705,29 @@ const AdminPage = () => {
         >
           <Users size={20} />
           Directory ({directory.length})
+        </button>
+        <button 
+          onClick={() => { setActiveTab('newsletters'); setActiveNewsletterEditor(null); }}
+          className={`tab-btn ${activeTab === 'newsletters' ? 'active' : ''}`}
+          style={{
+            padding: '16px',
+            fontSize: '1.05rem',
+            fontWeight: 800,
+            borderRadius: 'var(--radius-md)',
+            border: activeTab === 'newsletters' ? '2px solid var(--accent)' : '1px solid var(--border)',
+            background: activeTab === 'newsletters' ? 'var(--accent-glow)' : 'transparent',
+            color: activeTab === 'newsletters' ? 'var(--accent)' : 'var(--text-secondary)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            boxShadow: activeTab === 'newsletters' ? '0 0 10px var(--accent-glow)' : 'none',
+            transition: 'all 0.2s'
+          }}
+        >
+          <BookOpen size={20} />
+          Publications ({newsletters.length})
         </button>
       </div>
 
@@ -1855,6 +1936,229 @@ const AdminPage = () => {
                   <button 
                     type="button" 
                     onClick={() => setActiveDirectoryEditor(null)}
+                    className="btn btn-outline"
+                    style={{ borderColor: 'var(--border-strong)', color: 'var(--text-secondary)', padding: '16px 32px', fontSize: '1.1rem', fontWeight: 700 }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ============================================================
+          TAB: NEWSLETTERS / PUBLICATIONS
+         ============================================================ */}
+      {activeTab === 'newsletters' && (
+        <div className="tab-pane">
+          
+          {/* Default List View */}
+          {!activeNewsletterEditor && (
+            <div className="glass-panel" style={{ padding: 'var(--space-6)', border: '1px solid var(--border)' }}>
+              
+              {/* Header Search & Create row */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-6)' }}>
+                <div style={{ position: 'relative', flex: 1, minWidth: '280px' }}>
+                  <Search size={18} style={{ position: 'absolute', left: '16px', top: '15px', color: 'var(--text-muted)' }} />
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="Search publications by title or year..."
+                    value={newslettersSearch}
+                    onChange={(e) => setNewslettersSearch(e.target.value)}
+                    style={{ paddingLeft: '48px', height: '48px', fontSize: '1.05rem' }}
+                  />
+                </div>
+                
+                <button 
+                  onClick={openNewsletterEditor}
+                  className="btn btn-primary"
+                  style={{ background: '#22c55e', borderColor: '#22c55e', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px', fontSize: '1rem', fontWeight: 800 }}
+                >
+                  <Plus size={20} />
+                  Add New Publication
+                </button>
+              </div>
+
+              {/* Data Table / List */}
+              {filteredNewslettersList.length === 0 ? (
+                <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '40px 0' }}>No matching publications found.</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {filteredNewslettersList.map(n => (
+                    <div 
+                      key={n.id} 
+                      style={{ 
+                        display: 'flex', 
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-between', 
+                        alignItems: 'center', 
+                        padding: '20px', 
+                        background: 'rgba(255,255,255,0.01)', 
+                        border: '1px solid var(--border)', 
+                        borderRadius: '12px',
+                        gap: '16px'
+                      }}
+                    >
+                      <div>
+                        <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>{n.title}</h4>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                          Year: <strong>{n.year}</strong> • Date: <strong>{n.published_date}</strong> • Size: <strong>{n.size}</strong> • Downloads: <strong style={{ color: 'var(--success)' }}>{n.downloads}</strong>
+                        </p>
+                      </div>
+                      
+                      {/* Action buttons */}
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button 
+                          onClick={() => triggerDeleteCheck('newsletter', n)}
+                          className="btn btn-outline btn-sm"
+                          style={{ borderColor: '#ef4444', color: '#f87171', padding: '10px 18px', fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
+                        >
+                          <Trash2 size={16} />
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Form Panel (Add Mode Only) */}
+          {activeNewsletterEditor === 'add' && (
+            <div className="glass-panel" style={{ padding: 'var(--space-6)', border: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '16px', marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Add New Publication</h2>
+                <button 
+                  onClick={() => setActiveNewsletterEditor(null)}
+                  style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <form onSubmit={handleNewsletterSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
+                
+                {/* File Upload Field */}
+                <div className="form-group" style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '24px', border: '1px dashed var(--border-strong)', borderRadius: '12px', textAlign: 'center' }}>
+                  <label style={{ fontSize: '1.1rem', fontWeight: 800, display: 'block', marginBottom: '12px' }}>Upload PDF Newsletter File *</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                    <input 
+                      type="file" 
+                      id="newsletter-pdf-file" 
+                      accept=".pdf" 
+                      onChange={(e) => handlePhotoUpload(e, 'newsletter')} 
+                      style={{ display: 'none' }} 
+                    />
+                    <label 
+                      htmlFor="newsletter-pdf-file"
+                      className="btn btn-secondary"
+                      style={{ padding: '12px 24px', fontSize: '1rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                    >
+                      <Upload size={18} />
+                      Choose PDF File
+                    </label>
+                    {newsletterForm.file_url ? (
+                      <span style={{ color: 'var(--success)', fontWeight: 700, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Check size={18} /> File Uploaded: {newsletterForm.size}
+                      </span>
+                    ) : (
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Only PDF files are supported. Max size 5MB.</span>
+                    )}
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Publication Title *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. Lekha March 2022 Edition"
+                      value={newsletterForm.title} 
+                      onChange={(e) => setNewsletterForm({...newsletterForm, title: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Publication Year *</label>
+                    <select 
+                      className="form-input" 
+                      value={newsletterForm.year} 
+                      onChange={(e) => setNewsletterForm({...newsletterForm, year: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem', background: 'var(--bg-input)' }} 
+                      required
+                    >
+                      <option value="2022">2022</option>
+                      <option value="2021">2021</option>
+                      <option value="Archived">Archived (Older)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Published Date *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. 06 Feb 2022"
+                      value={newsletterForm.published_date} 
+                      onChange={(e) => setNewsletterForm({...newsletterForm, published_date: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Gradient Cover Style *</label>
+                    <select 
+                      className="form-input" 
+                      value={newsletterForm.cover_bg} 
+                      onChange={(e) => setNewsletterForm({...newsletterForm, cover_bg: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem', background: 'var(--bg-input)' }} 
+                      required
+                    >
+                      <option value="linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)">Deep Navy</option>
+                      <option value="linear-gradient(135deg, #0f172a 0%, #064e3b 100%)">Forest Green</option>
+                      <option value="linear-gradient(135deg, #0f172a 0%, #311042 100%)">Midnight Violet</option>
+                      <option value="linear-gradient(135deg, #0f172a 0%, #581c87 100%)">Royal Purple</option>
+                      <option value="linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)">Cobalt Blue</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label style={{ fontSize: '1rem', fontWeight: 700 }}>Key Stories * (Separated by commas)</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="e.g. Youth Welfare Schemes, Cultural Meet updates, Annual reports"
+                    value={newsletterForm.mainStories} 
+                    onChange={(e) => setNewsletterForm({...newsletterForm, mainStories: e.target.value})}
+                    style={{ height: '48px', fontSize: '1.05rem' }} 
+                    required 
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '15px', marginTop: '10px', flexWrap: 'wrap' }}>
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary"
+                    disabled={actionLoading || !newsletterForm.file_url}
+                    style={{ background: '#22c55e', borderColor: '#22c55e', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 32px', fontSize: '1.1rem', fontWeight: 800 }}
+                  >
+                    <Check size={20} />
+                    Publish Publication
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => setActiveNewsletterEditor(null)}
                     className="btn btn-outline"
                     style={{ borderColor: 'var(--border-strong)', color: 'var(--text-secondary)', padding: '16px 32px', fontSize: '1.1rem', fontWeight: 700 }}
                   >
