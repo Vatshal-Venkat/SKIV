@@ -193,7 +193,7 @@ const LekhaNewslettersPage = () => {
                   <h4 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#fff', marginTop: '4px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>LEKHA</h4>
                 </div>
                 <div style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  <p style={{ fontSize: '0.85rem', color: '#d4af37', fontWeight: 700 }}>{issue.title.split('Lekha')[1].trim()}</p>
+                  <p style={{ fontSize: '0.85rem', color: '#d4af37', fontWeight: 700 }}>{issue.title.replace('Lekha', '').replace('లేఖ', '').trim()}</p>
                   <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)', marginTop: '2px' }}>{issue.publishedDate}</p>
                 </div>
               </div>
