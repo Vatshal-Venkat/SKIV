@@ -624,6 +624,8 @@ export const apiService = {
     const data = await response.json();
     return data.map(item => ({
       ...item,
+      publishedDate: item.published_date,
+      coverBg: item.cover_bg,
       mainStories: item.main_stories ? item.main_stories.split(',').map(s => s.trim()) : []
     }));
   },
@@ -648,6 +650,8 @@ export const apiService = {
     const data = await response.json();
     return {
       ...data,
+      publishedDate: data.published_date,
+      coverBg: data.cover_bg,
       mainStories: data.main_stories ? data.main_stories.split(',').map(s => s.trim()) : []
     };
   },
@@ -669,6 +673,8 @@ export const apiService = {
     const data = await response.json();
     return {
       ...data,
+      publishedDate: data.published_date,
+      coverBg: data.cover_bg,
       mainStories: data.main_stories ? data.main_stories.split(',').map(s => s.trim()) : []
     };
   }
