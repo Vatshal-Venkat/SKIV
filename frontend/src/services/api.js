@@ -615,5 +615,61 @@ export const apiService = {
     });
     if (!response.ok) throw new Error("Failed to delete directory member.");
     return true;
+  },
+
+  // Newsletter endpoints (Connected to DB)
+  async getNewsletters() {
+    const response = await fetch(`${API_BASE_URL}/newsletters`);
+    if (!response.ok) throw new Error("Failed to fetch newsletters.");
+    const data = await response.json();
+    return data.map(item => ({
+      ...item,
+      mainStories: item.main_stories ? item.main_stories.split(',').map(s => s.trim()) : []
+    }));
+  },
+
+  async createNewsletter(newsletterData) {
+    const payload = {
+      ...newsletterData,
+      main_stories: Array.isArray(newsletterData.mainStories) ? newsletterData.mainStories.join(', ') : newsletterData.mainStories
+    };
+    const response = await fetch(`${API_BASE_URL}/newsletters`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || "Failed to create newsletter.");
+    }
+    const data = await response.json();
+    return {
+      ...data,
+      mainStories: data.main_stories ? data.main_stories.split(',').map(s => s.trim()) : []
+    };
+  },
+
+  async deleteNewsletter(id) {
+    const response = await fetch(`${API_BASE_URL}/newsletters/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error("Failed to delete newsletter.");
+    return true;
+  },
+
+  async trackNewsletterDownload(id) {
+    const response = await fetch(`${API_BASE_URL}/newsletters/download/${id}`, {
+      method: "POST"
+    });
+    if (!response.ok) throw new Error("Failed to track newsletter download.");
+    const data = await response.json();
+    return {
+      ...data,
+      mainStories: data.main_stories ? data.main_stories.split(',').map(s => s.trim()) : []
+    };
   }
 };
