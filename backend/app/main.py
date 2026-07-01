@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.database import Base, engine
-from app.routers import auth, matrimony, news, media, events, jobs, directory
+from app.routers import auth, matrimony, news, media, events, jobs, directory, newsletters
 
 # Create tables during startup if not already created
 Base.metadata.create_all(bind=engine)
@@ -39,6 +39,7 @@ app.include_router(media.router)
 app.include_router(events.router)
 app.include_router(jobs.router)
 app.include_router(directory.router)
+app.include_router(newsletters.router)
 
 @app.get("/api/health", tags=["Health"])
 def health_check():
