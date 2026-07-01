@@ -14,6 +14,7 @@ router = APIRouter(prefix="/api/newsletters", tags=["Newsletters / Publications"
 class NewsletterBase(BaseModel):
     title: str
     type: str = "Newsletter"
+    author: str = "Sri Dwarapu Srinivasa Rao"
     year: str
     published_date: str
     size: str
