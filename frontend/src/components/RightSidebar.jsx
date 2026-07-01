@@ -193,12 +193,12 @@ const RightSidebar = () => {
           </div>
 
           {/* Telugu Edition */}
-          <div className="lekha-edition-card" onClick={(e) => { e.preventDefault(); alert('Downloading Telugu Edition...'); }}>
+          <Link to="/lekha-newsletters" className="lekha-edition-card" style={{ textDecoration: 'none' }}>
             <div className="lekha-edition-banner-container">
               <img src={lekhaTelugu} alt="Sistakaranam Lekha Telugu" className="lekha-edition-banner-img" />
               <div className="lekha-edition-overlay">
                 <Download className="lekha-download-btn-icon" />
-                <span className="lekha-download-btn-text">PDF డౌన్‌లోడ్</span>
+                <span className="lekha-download-btn-text">Open Lekha Portal</span>
               </div>
             </div>
             <div className="lekha-edition-meta">
@@ -206,12 +206,12 @@ const RightSidebar = () => {
               <span>సంపుటి 12, సంచిక 4</span>
               <span>28 పేజీలు</span>
             </div>
-          </div>
+          </Link>
 
           {/* Lekha Archives Link */}
-          <a href="#" className="lekha-archives-link" onClick={(e) => e.preventDefault()}>
+          <Link to="/lekha-newsletters" className="lekha-archives-link">
             Lekha Archives
-          </a>
+          </Link>
         </div>
       </div>
 
