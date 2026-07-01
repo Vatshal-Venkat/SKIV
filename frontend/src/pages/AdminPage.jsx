@@ -45,6 +45,7 @@ const AdminPage = () => {
   // Form states - Newsletter
   const [newsletterForm, setNewsletterForm] = useState({
     title: '',
+    author: 'Sri Dwarapu Srinivasa Rao',
     year: '2022',
     published_date: '',
     size: '5.0 MB',
@@ -458,6 +459,7 @@ const AdminPage = () => {
     setErrorMsg('');
     setNewsletterForm({
       title: '',
+      author: 'Sri Dwarapu Srinivasa Rao',
       year: '2022',
       published_date: new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }),
       size: '0.0 MB',
@@ -2085,6 +2087,21 @@ const AdminPage = () => {
                     />
                   </div>
                   
+                  <div className="form-group">
+                    <label style={{ fontSize: '1rem', fontWeight: 700 }}>Author / Editor *</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. Sri Dwarapu Srinivasa Rao"
+                      value={newsletterForm.author} 
+                      onChange={(e) => setNewsletterForm({...newsletterForm, author: e.target.value})}
+                      style={{ height: '48px', fontSize: '1.05rem' }} 
+                      required 
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                   <div className="form-group">
                     <label style={{ fontSize: '1rem', fontWeight: 700 }}>Publication Year *</label>
                     <select 
