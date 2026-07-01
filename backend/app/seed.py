@@ -307,104 +307,109 @@ def seed_database():
             print(f"Directory members already seeded ({member_count} members in DB).")
             
         # 8. Seed Newsletters
-        newsletter_count = db.query(Newsletter).count()
-        if newsletter_count == 0:
-            print("Seeding sample newsletters...")
-            sample_newsletters = [
-                Newsletter(
-                    title="Lekha February 2022 Edition",
-                    type="Newsletter",
-                    year="2022",
-                    published_date="06 Feb 2022",
-                    size="5.03 MB",
-                    downloads=579,
-                    cover_bg="linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
-                    main_stories="Matrimonial Hub Launch, Annual General Body resolutions, State caste welfare updates",
-                    file_url="https://res.cloudinary.com/xlp70i29/image/upload/v1/skiv_uploads/dummy_pdf.pdf"
-                ),
-                Newsletter(
-                    title="లేఖ (ఫిబ్రవరి 2022)",
-                    type="Newsletter",
-                    year="2022",
-                    published_date="06 Feb 2022",
-                    size="4.93 MB",
-                    downloads=547,
-                    cover_bg="linear-gradient(135deg, #0f172a 0%, #064e3b 100%)",
-                    main_stories="కార్తీక వనభోజన మహోత్సవం, శేఖి యాన్యువల్ అవార్డ్స్ విజేతలు, సంక్షేమ సంఘాల కమిటీ నివేదిక",
-                    file_url="https://res.cloudinary.com/xlp70i29/image/upload/v1/skiv_uploads/dummy_pdf.pdf"
-                ),
-                Newsletter(
-                    title="Lekha January 2022 Edition",
-                    type="Newsletter",
-                    year="2022",
-                    published_date="02 Jan 2022",
-                    size="4.96 MB",
-                    downloads=628,
-                    cover_bg="linear-gradient(135deg, #0f172a 0%, #311042 100%)",
-                    main_stories="Butterfly Trip Reports, Sankranti Cultural Calendar, Caste Certificate Application guide",
-                    file_url="https://res.cloudinary.com/xlp70i29/image/upload/v1/skiv_uploads/dummy_pdf.pdf"
-                ),
-                Newsletter(
-                    title="లేఖ (జనవరి 2022)",
-                    type="Newsletter",
-                    year="2022",
-                    published_date="02 Jan 2022",
-                    size="4.32 MB",
-                    downloads=532,
-                    cover_bg="linear-gradient(135deg, #0f172a 0%, #581c87 100%)",
-                    main_stories="సీతాకోకచిలుక సమావేశ నివేదిక, సంక్రాంతి శుభాకాంక్షలు, జీవనోపాధి నైపుణ్యాల శిక్షణ",
-                    file_url="https://res.cloudinary.com/xlp70i29/image/upload/v1/skiv_uploads/dummy_pdf.pdf"
-                ),
-                Newsletter(
-                    title="Lekha December 2021 Edition",
-                    type="Newsletter",
-                    year="2021",
-                    published_date="04 Dec 2021",
-                    size="6.01 MB",
-                    downloads=531,
-                    cover_bg="linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-                    main_stories="Kalam Snehithulu Poetry Meet, Atreya Gotram Genealogies, Community Trust annual budget",
-                    file_url="https://res.cloudinary.com/xlp70i29/image/upload/v1/skiv_uploads/dummy_pdf.pdf"
-                ),
-                Newsletter(
-                    title="లేఖ (డిసెంబర్ 2021)",
-                    type="Newsletter",
-                    year="2021",
-                    published_date="04 Dec 2021",
-                    size="5.21 MB",
-                    downloads=572,
-                    cover_bg="linear-gradient(135deg, #0f172a 0%, #3b82f6 100%)",
-                    main_stories="కళాకారుల సన్మానం, ఆత్రేయ గోత్ర వంశ వృక్షం, కార్తీక వనభోజనాల ఏర్పాట్లు",
-                    file_url="https://res.cloudinary.com/xlp70i29/image/upload/v1/skiv_uploads/dummy_pdf.pdf"
-                ),
-                Newsletter(
-                    title="Lekha November 2021 Edition",
-                    type="Newsletter",
-                    year="2021",
-                    published_date="06 Nov 2021",
-                    size="5.23 MB",
-                    downloads=586,
-                    cover_bg="linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
-                    main_stories="Job Fair Placements, Bhubaneswar Directory Releases, Annual Scholarship distribution",
-                    file_url="https://res.cloudinary.com/xlp70i29/image/upload/v1/skiv_uploads/dummy_pdf.pdf"
-                ),
-                Newsletter(
-                    title="లేఖ (నవంబర్ 2021)",
-                    type="Newsletter",
-                    year="2021",
-                    published_date="06 Nov 2021",
-                    size="3.96 MB",
-                    downloads=504,
-                    cover_bg="linear-gradient(135deg, #0f172a 0%, #064e3b 100%)",
-                    main_stories="ఉద్యోగ నియామకాలు, భువనేశ్వర్ డైరెక్టరీ విడుదల, మెరిట్ విద్యార్థులకు పురస్కారాలు",
-                    file_url="https://res.cloudinary.com/xlp70i29/image/upload/v1/skiv_uploads/dummy_pdf.pdf"
-                )
-            ]
-            db.add_all(sample_newsletters)
-            db.commit()
-            print("Sample newsletters seeded.")
-        else:
-            print(f"Newsletters already seeded ({newsletter_count} newsletters in DB).")
+        db.query(Newsletter).delete()
+        print("Seeding sample newsletters...")
+        sample_newsletters = [
+            Newsletter(
+                title="Lekha February 2022 Edition",
+                type="Newsletter",
+                author="Sri Dwarapu Srinivasa Rao",
+                year="2022",
+                published_date="06 Feb 2022",
+                size="5.03 MB",
+                downloads=579,
+                cover_bg="linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
+                main_stories="Matrimonial Hub Launch, Annual General Body resolutions, State caste welfare updates",
+                file_url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            ),
+            Newsletter(
+                title="లేఖ (ఫిబ్రవరి 2022)",
+                type="Newsletter",
+                author="Sri Dwarapu Srinivasa Rao",
+                year="2022",
+                published_date="06 Feb 2022",
+                size="4.93 MB",
+                downloads=547,
+                cover_bg="linear-gradient(135deg, #0f172a 0%, #064e3b 100%)",
+                main_stories="కార్తీక వనభోజన మహోత్సవం, శేఖి యాన్యువల్ అవార్డ్స్ విజేతలు, సంక్షేమ సంఘాల కమిటీ నివేదిక",
+                file_url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            ),
+            Newsletter(
+                title="Lekha January 2022 Edition",
+                type="Newsletter",
+                author="Sri Dwarapu Srinivasa Rao",
+                year="2022",
+                published_date="02 Jan 2022",
+                size="4.96 MB",
+                downloads=628,
+                cover_bg="linear-gradient(135deg, #0f172a 0%, #311042 100%)",
+                main_stories="Butterfly Trip Reports, Sankranti Cultural Calendar, Caste Certificate Application guide",
+                file_url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            ),
+            Newsletter(
+                title="లేఖ (జనవరి 2022)",
+                type="Newsletter",
+                author="Sri Dwarapu Srinivasa Rao",
+                year="2022",
+                published_date="02 Jan 2022",
+                size="4.32 MB",
+                downloads=532,
+                cover_bg="linear-gradient(135deg, #0f172a 0%, #581c87 100%)",
+                main_stories="సీతాకోకచిలుక సమావేశ నివేదిక, సంక్రాంతి శుభాకాంక్షలు, జీవనోపాధి నైపుణ్యాల శిక్షణ",
+                file_url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            ),
+            Newsletter(
+                title="Lekha December 2021 Edition",
+                type="Newsletter",
+                author="Sri Dwarapu Srinivasa Rao",
+                year="2021",
+                published_date="04 Dec 2021",
+                size="6.01 MB",
+                downloads=531,
+                cover_bg="linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
+                main_stories="Kalam Snehithulu Poetry Meet, Atreya Gotram Genealogies, Community Trust annual budget",
+                file_url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            ),
+            Newsletter(
+                title="లేఖ (డిసెంబర్ 2021)",
+                type="Newsletter",
+                author="Sri Dwarapu Srinivasa Rao",
+                year="2021",
+                published_date="04 Dec 2021",
+                size="5.21 MB",
+                downloads=572,
+                cover_bg="linear-gradient(135deg, #0f172a 0%, #3b82f6 100%)",
+                main_stories="కళాకారుల సన్మానం, ఆత్రేయ గోత్ర వంశ వృక్షం, కార్తీక వనభోజనాల ఏర్పాట్లు",
+                file_url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            ),
+            Newsletter(
+                title="Lekha November 2021 Edition",
+                type="Newsletter",
+                author="Sri Dwarapu Srinivasa Rao",
+                year="2021",
+                published_date="06 Nov 2021",
+                size="5.23 MB",
+                downloads=586,
+                cover_bg="linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
+                main_stories="Job Fair Placements, Bhubaneswar Directory Releases, Annual Scholarship distribution",
+                file_url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            ),
+            Newsletter(
+                title="లేఖ (నవంబర్ 2021)",
+                type="Newsletter",
+                author="Sri Dwarapu Srinivasa Rao",
+                year="2021",
+                published_date="06 Nov 2021",
+                size="3.96 MB",
+                downloads=504,
+                cover_bg="linear-gradient(135deg, #0f172a 0%, #064e3b 100%)",
+                main_stories="ఉద్యోగ నియామకాలు, భువనేశ్వర్ డైరెక్టరీ విడుదల, మెరిట్ విద్యార్థులకు పురస్కారాలు",
+                file_url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            )
+        ]
+        db.add_all(sample_newsletters)
+        db.commit()
+        print("Sample newsletters seeded.")
             
         print("All seeds verified.")
             
