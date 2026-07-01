@@ -117,6 +117,7 @@ class Newsletter(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
     type = Column(String(100), default="Newsletter", nullable=False)
+    author = Column(String(255), default="Sri Dwarapu Srinivasa Rao", nullable=False)
     year = Column(String(50), nullable=False)
     published_date = Column(String(100), nullable=False)
     size = Column(String(50), nullable=False)
